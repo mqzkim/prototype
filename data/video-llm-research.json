@@ -2,7 +2,7 @@
   "metadata": {
     "title": "Video LLM Research Report",
     "date": "2026-03-26",
-    "version": "1.0"
+    "version": "1.1"
   },
   "videoGenerationModels": [
     {
@@ -178,15 +178,50 @@
       "limitations": ["상용 모델 대비 품질 격차"]
     }
   ],
+  "additionalModels": [
+    {
+      "name": "Pika 2.5",
+      "provider": "Pika Labs",
+      "type": "closed-source",
+      "features": ["Pikadditions(오브젝트삽입)", "Pikaffects(시각효과)", "Pikaformance(립싱크)"],
+      "pricing": "$10/월(700크레딧)부터",
+      "note": "소셜 미디어 콘텐츠 특화, iOS 앱 출시"
+    },
+    {
+      "name": "Luma Ray3 Modify",
+      "provider": "Luma Labs",
+      "type": "closed-source",
+      "features": ["키프레임", "영상확장(1분)", "루프", "퍼포먼스 보존 편집"],
+      "pricing": "Lite $9.99/월 ~ Unlimited $94.99/월",
+      "funding": "$9억 펀딩 (사우디 Humain 주도, a16z 참여)"
+    },
+    {
+      "name": "SkyReels V1",
+      "provider": "Community",
+      "type": "open-source",
+      "features": ["HunyuanVideo 기반", "영화/TV 클립 1000만+ 파인튜닝", "시네마틱 인물 묘사"],
+      "selfHosted": true
+    }
+  ],
   "marketAnalysis": {
-    "marketSize": "글로벌 SaaS 시장 $315B (2026 초), AI 비디오 스타트업 $15B+ 펀딩 (2025)",
+    "marketSize": {
+      "saasGlobal": "$315B (2026 초)",
+      "llmMarket": "$105.7B (2026) → $1,498.9B (2035, CAGR 34.44%)",
+      "videoEditingSaas": "$24.9B (2024) → $52.6B (2029, CAGR 16.4%)",
+      "genAISpending": "$644B (2025 글로벌)",
+      "aiVideoFunding": "$15B+ (2025)"
+    },
     "keyTrends": [
       "2026년은 'AI-Native SaaS' 시대 - AI를 볼트온이 아닌 기초부터 설계",
       "LLM API 가격 2025→2026 약 80% 하락",
       "비디오 생성 비용: $0.01/sec (Kling) ~ $0.60/sec (Veo 4K)",
-      "Sora 셧다운 → 대안 수요 폭증",
+      "Sora 셧다운(2026.03.24) → 대안 수요 폭증, 개발자 대규모 이탈",
       "모델별 특화 영역 확보 → 단일 모델이 아닌 멀티모델 워크플로우 시대",
-      "오픈소스 모델과 상용 모델 격차 급격히 축소"
+      "오픈소스 모델과 상용 모델 격차 급격히 축소 (Wan 2.1 VBench 1위)",
+      "오디오-비디오 통합 생성이 2025년 후반부터 표준화",
+      "Kling ARR $2.4억 달성 (출시 19개월)",
+      "비디오 이해 분야에서 오픈소스(Tarsier2, Eagle 2.5)가 GPT-4o 능가 시작",
+      "Fortune 500의 92%가 소비자 AI 도구 사용하나 엔터프라이즈 도입은 5%에 불과"
     ],
     "saasOpportunities": [
       "통합 비디오 AI API 게이트웨이 (여러 모델을 하나의 API로)",
@@ -194,7 +229,10 @@
       "비디오 생성+이해 통합 파이프라인",
       "오픈소스 모델 관리형 호스팅 (GPU 서버리스)",
       "비디오 AI 워크플로우 오케스트레이터",
-      "산업별 특화 비디오 AI (의료, 교육, 이커머스)"
+      "산업별 특화 비디오 AI (의료, 교육, 이커머스, 부동산 가상투어)",
+      "Sora 종료 후 마이그레이션 서비스",
+      "엔터프라이즈 거버넌스 (저작권, 초상권, 감사 추적)",
+      "비용 최적화 레이어 (지능형 라우팅 + 캐싱)"
     ]
   },
   "pricingComparison": {
