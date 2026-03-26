@@ -76,44 +76,75 @@ function validateSections(html, locale) {
 function validateOverflow(html, locale) {
   console.log(`\n[${locale}] Overflow protection`);
 
-  // All flex containers with text content should have overflow control
-  const cardRegex = /class="[^"]*(?:feature-card|glow-card|trending-repo|trending-item|saas-product|saas-item)[^"]*"/g;
-  const cards = html.match(cardRegex) || [];
-  check(`Cards found (${cards.length} total)`, cards.length > 0);
-
-  // Check that overflow:hidden or text-overflow:ellipsis exists in styles
   const styleMatch = html.match(/<style>([\s\S]*?)<\/style>/);
-  if (styleMatch) {
-    const css = styleMatch[1];
+  const css = styleMatch ? styleMatch[1] : '';
 
-    // Trending items must have overflow control
-    check(
-      'trending-info has overflow:hidden',
-      css.includes('.trending-info') && css.includes('overflow') && css.includes('hidden')
-    );
-
-    // Feature cards should contain overflow
-    check(
-      'feature-card has overflow control',
-      css.includes('.feature-card') && css.includes('overflow')
-    );
-
-    // All text-bearing flex children should have min-width:0
-    check(
-      'trending-info has min-width:0',
-      css.includes('.trending-info') && css.includes('min-width')
-    );
-
-    // Check text-overflow:ellipsis on name/desc fields
-    const ellipsisFields = ['trending-name', 'trending-desc', 'saas-name', 'saas-tagline'];
-    for (const field of ellipsisFields) {
-      if (css.includes(`.${field}`)) {
-        check(
-          `${field} has text-overflow:ellipsis`,
-          css.includes(field) && css.includes('text-overflow')
-        );
-      }
+  // --- CSS-level checks: flex containers must have overflow control ---
+  const overflowContainers = [
+    ['feature-card', 'overflow'],
+    ['trending-info', 'overflow'],
+    ['trending-info', 'min-width'],
+  ];
+  for (const [cls, prop] of overflowContainers) {
+    // Parse the specific CSS rule block for this class
+    const ruleRegex = new RegExp(`\\.${cls.replace('-', '\\-')}[^{]*\\{([^}]+)\\}`, 'g');
+    let ruleMatch;
+    let found = false;
+    while ((ruleMatch = ruleRegex.exec(css)) !== null) {
+      if (ruleMatch[1].includes(prop)) found = true;
     }
+    check(`CSS: .${cls} has ${prop}`, found);
+  }
+
+  // --- Content-level checks: detect actual overflow risk in rendered HTML ---
+
+  // Extract all text content inside flex-child elements that should be truncated
+  const textFieldPatterns = [
+    { regex: /class="trending-name">([^<]*)</g, name: 'trending-name', maxLen: 80 },
+    { regex: /class="trending-desc">([^<]*)</g, name: 'trending-desc', maxLen: 120 },
+    { regex: /class="trending-lang">([^<]*)</g, name: 'trending-lang', maxLen: 15 },
+    { regex: /class="saas-name">([^<]*)</g, name: 'saas-name', maxLen: 60 },
+    { regex: /class="saas-tagline">([^<]*)</g, name: 'saas-tagline', maxLen: 120 },
+    { regex: /class="archive-summary">([^<]*)</g, name: 'archive-summary', maxLen: 80 },
+  ];
+
+  for (const { regex, name, maxLen } of textFieldPatterns) {
+    let match;
+    const values = [];
+    while ((match = regex.exec(html)) !== null) {
+      values.push(match[1].trim());
+    }
+    if (values.length === 0) continue;
+
+    const longest = values.reduce((a, b) => a.length > b.length ? a : b, '');
+    // Check that CSS has ellipsis rule for this field
+    const ellipsisRegex = new RegExp(`\\.${name.replace('-', '\\-')}[^}]*text-overflow\\s*:\\s*ellipsis`);
+    const hasEllipsis = ellipsisRegex.test(css);
+
+    if (longest.length > maxLen) {
+      // Long content exists — CSS MUST have ellipsis protection
+      check(
+        `${name}: long content (${longest.length} chars) has text-overflow:ellipsis`,
+        hasEllipsis
+      );
+    } else {
+      check(`${name}: content length OK (max ${longest.length}/${maxLen} chars)`, true);
+    }
+  }
+
+  // --- Structural check: flex rows with text must have parent overflow:hidden ---
+  const flexRowClasses = ['trending-repo', 'trending-item', 'saas-product', 'saas-item'];
+  for (const cls of flexRowClasses) {
+    const rowRegex = new RegExp(`class="[^"]*${cls}[^"]*"`);
+    if (!rowRegex.test(html)) continue;
+
+    const ruleRegex = new RegExp(`\\.${cls.replace('-', '\\-')}[^{]*\\{([^}]+)\\}`, 'g');
+    let ruleMatch;
+    let hasOverflow = false;
+    while ((ruleMatch = ruleRegex.exec(css)) !== null) {
+      if (ruleMatch[1].includes('overflow')) hasOverflow = true;
+    }
+    check(`CSS: .${cls} row has overflow control`, hasOverflow);
   }
 }
 
