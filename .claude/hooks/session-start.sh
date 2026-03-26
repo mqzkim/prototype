@@ -1,21 +1,20 @@
 #!/bin/bash
-# Session Start Hook for Claude Code Cloud
-# This runs automatically when a new Claude Code session starts.
-# Ensures the project is ready to use without any local setup.
+set -euo pipefail
 
-set -e
+# Only run in remote (Claude Code on the web) environments
+if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
+  exit 0
+fi
 
-echo "==> Bootstrapping prototype-daily-service..."
-
-# Install dependencies if needed
-if [ ! -d "node_modules" ]; then
-  echo "==> Installing dependencies..."
+# Install dependencies if node_modules doesn't exist
+if [ ! -d "$CLAUDE_PROJECT_DIR/node_modules" ]; then
+  cd "$CLAUDE_PROJECT_DIR"
   npm install
 fi
 
 # Build the site
-echo "==> Building site..."
+cd "$CLAUDE_PROJECT_DIR"
 npm run build
 
-echo "==> Bootstrap complete. Ready to develop!"
-echo "==> Run 'npm test' to verify, 'npm run daily' to test daily update."
+# Verify everything works
+npm test
