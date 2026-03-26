@@ -53,6 +53,33 @@
       "status": "success",
       "durationMs": 0,
       "timestamp": "2026-03-26T14:53:42.499Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-26T15:12:53.206Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-26T15:12:53.225Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-26T15:12:53.232Z"
     }
   ]
 }
