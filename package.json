@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node src/generators/build.js",
     "daily": "node scripts/daily-update.js",
-    "test": "node --test tests/build.test.js"
+    "test": "node --test tests/build.test.js",
+    "validate:design": "node scripts/validate-design.js"
   },
   "keywords": ["claude-code", "cloud-native", "daily-service"],
   "license": "MIT"

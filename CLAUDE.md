@@ -39,6 +39,8 @@
 ├── .claude/
 │   ├── settings.json       # Claude Code 설정 + SessionStart hook
 │   ├── triggers.json       # Claude Code 크론 트리거 정의
+│   ├── agents/
+│   │   └── design-reviewer.md  # 디자인 검증 에이전트 정의
 │   └── hooks/
 │       └── session-start.sh # 세션 시작 시 auto bootstrap
 ├── src/
@@ -48,14 +50,15 @@
 │       ├── index.html       # AI-Native UI 대시보드 템플릿
 │       └── daily.html       # 일별 상세 페이지 템플릿
 ├── scripts/
-│   ├── daily-update.js      # 메인 크론 엔트리포인트 (6개 모듈 호출)
+│   ├── daily-update.js      # 메인 크론 엔트리포인트 (7개 모듈 호출)
 │   ├── collect-stats.js     # 레포 통계 수집 (commits, LOC, files)
 │   ├── select-quote.js      # 날짜 기반 개발 명언 선택
 │   ├── generate-til.js      # 코드 분석 기반 TIL 자동 생성
 │   ├── fetch-trending.js    # GitHub trending 스크래핑
 │   ├── log-improvement.js   # git commit 분석 → 개선 로그
 │   ├── fetch-apis.js        # 환율 + 날씨 API 수집
-│   └── fetch-saas.js        # 인디 SaaS 제품 수집 (Product Hunt)
+│   ├── fetch-saas.js        # 인디 SaaS 제품 수집 (Product Hunt)
+│   └── validate-design.js   # 디자인 검증 하네스
 ├── data/                    # ★ git-tracked, 매일 누적되는 데이터
 │   ├── daily-log.json       # 일별 changelog (version, changes, stats)
 │   ├── metrics.json         # 현재 메트릭 (streak, totals)
@@ -80,8 +83,9 @@
 ## Commands
 - `npm install` - 의존성 설치
 - `npm run build` - 사이트 빌드 (dist/ 생성)
-- `npm run daily` - 데일리 업데이트 실행 (6개 모듈)
+- `npm run daily` - 데일리 업데이트 실행 (7개 모듈)
 - `npm test` - 테스트 실행
+- `npm run validate:design` - 디자인 검증 하네스 실행
 
 ## Development Rules
 1. 모든 데이터는 `data/` 디렉토리에 JSON으로 저장, **반드시 git-tracked**
@@ -89,6 +93,36 @@
 3. 새 기능 추가 시 반드시 테스트 포함
 4. 크론 잡은 멱등성(idempotent) 보장 — 같은 날 두 번 돌려도 안전
 5. 외부 API 실패 시 graceful degradation — null 값 허용, 크래시 금지
+
+## Design Validation Harness
+UI 변경 시 반드시 디자인 검증 하네스를 실행합니다.
+
+### 검증 파이프라인
+```
+npm run build && npm run validate:design
+```
+
+### 검증 항목
+| 카테고리 | 검증 내용 |
+|---------|----------|
+| **섹션 완결성** | 모든 필수 섹션이 en/ko 빌드에 존재하는지 확인 |
+| **Overflow 보호** | flex/grid 컨테이너의 overflow 제어, text-overflow:ellipsis 적용 |
+| **i18n 완결성** | `{{t.*}}`, `{{TEMPLATE}}` 미치환 변수 잔존 여부 |
+| **접근성** | charset, viewport, title, lang 속성 존재 |
+| **레이아웃 무결성** | 반응형 breakpoint, 카드 구조 검증 |
+| **일별 페이지** | 최신 daily 페이지의 플레이스홀더 미잔존 확인 |
+
+### 에이전트
+- `.claude/agents/design-reviewer.md` — 디자인 검증 전담 에이전트 정의
+- 새 UI 섹션 추가, CSS 변경, 템플릿 수정, 배포 전 점검 시 사용
+
+### 새 섹션 추가 시 체크리스트
+1. `src/templates/index.html` — 섹션 HTML + CSS 추가
+2. `src/templates/daily.html` — 일별 페이지에도 반영
+3. `data/i18n.json` — en/ko 번역 키 추가
+4. `src/generators/build.js` — 빌드 함수 + replace 추가
+5. `scripts/validate-design.js` — 필수 섹션 목록에 추가
+6. `npm run validate:design` — 검증 통과 확인
 
 ## Cloud-Only Workflow
 - 클론 후 `npm install && npm run build`로 즉시 실행 가능
