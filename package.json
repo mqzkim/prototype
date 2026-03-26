@@ -6,7 +6,10 @@
   "scripts": {
     "build": "node src/generators/build.js",
     "daily": "node scripts/daily-update.js",
-    "test": "node --test tests/build.test.js"
+    "start": "node src/server/index.js",
+    "test": "node --test tests/build.test.js tests/video-llm/router.test.js tests/video-llm/adapters.test.js tests/server/integration.test.js tests/client/sdk.test.js",
+    "lint": "node scripts/lint.js",
+    "evaluate": "node scripts/evaluate-rules.js"
   },
   "keywords": ["claude-code", "cloud-native", "daily-service"],
   "license": "MIT"

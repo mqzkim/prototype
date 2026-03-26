@@ -1,0 +1,38 @@
+{
+  "keys": [
+    {
+      "key": "vllm_test_free_001",
+      "userId": "test-free",
+      "tier": "free",
+      "created": "2026-03-26",
+      "active": true
+    },
+    {
+      "key": "vllm_test_starter_001",
+      "userId": "test-starter",
+      "tier": "starter",
+      "created": "2026-03-26",
+      "active": true
+    },
+    {
+      "key": "vllm_test_pro_001",
+      "userId": "test-pro",
+      "tier": "pro",
+      "created": "2026-03-26",
+      "active": true
+    },
+    {
+      "key": "vllm_test_enterprise_001",
+      "userId": "test-enterprise",
+      "tier": "enterprise",
+      "created": "2026-03-26",
+      "active": true
+    }
+  ],
+  "tiers": {
+    "free": { "rateLimit": 10, "monthlyQuota": 100, "price": 0 },
+    "starter": { "rateLimit": 60, "monthlyQuota": 1000, "price": 19 },
+    "pro": { "rateLimit": 300, "monthlyQuota": 10000, "price": 79 },
+    "enterprise": { "rateLimit": 1000, "monthlyQuota": -1, "price": 299 }
+  }
+}

@@ -141,19 +141,87 @@ function buildAPISection(apiData) {
   return html;
 }
 
-function buildSaaSSection(saas) {
-  if (!saas || !saas.daily || saas.daily.length === 0) return '<p class="muted-text">Pending first fetch</p>';
-  const latest = saas.daily[saas.daily.length - 1];
-  if (!latest.products || latest.products.length === 0) return '<p class="muted-text">No data yet</p>';
-  return latest.products.slice(0, 5).map((p, i) => `
-    <div class="saas-product">
-      <span class="saas-rank">#${i + 1}</span>
-      <div class="saas-info">
-        <span class="saas-name">${p.name}</span>
-        <span class="saas-tagline">${p.tagline || ''}</span>
+function buildVideoLLMSection(research, t) {
+  if (!research) return '<p class="muted-text">No research data</p>';
+
+  // Generation models table
+  const genModels = (research.videoGenerationModels || []).slice(0, 5);
+  let genHtml = '<div class="video-models-grid">';
+  for (const m of genModels) {
+    const priceDisplay = typeof m.pricingPerSec === 'string' ? m.pricingPerSec : Object.values(m.pricingPerSec || {})[0] || '—';
+    const typeLabel = m.type === 'closed-source' ? `<span class="model-badge closed">${t.closedSource}</span>` : `<span class="model-badge open">${t.openSource}</span>`;
+    genHtml += `
+      <div class="video-model-card">
+        <div class="video-model-header">
+          <span class="video-model-name">${m.name}</span>
+          ${typeLabel}
+        </div>
+        <div class="video-model-meta">
+          <span class="video-model-res">${m.maxResolution}</span>
+          <span class="video-model-price">${priceDisplay}${t.perSec}</span>
+        </div>
+        <div class="video-model-caps">${(m.strengths || []).slice(0, 2).join(' · ')}</div>
+      </div>`;
+  }
+  genHtml += '</div>';
+
+  // Pricing chart bars
+  const pricing = research.pricingComparison?.models || {};
+  const maxPrice = Math.max(...Object.values(pricing), 0.01);
+  let pricingHtml = '<div class="pricing-bars">';
+  for (const [name, price] of Object.entries(pricing)) {
+    const width = Math.max(5, Math.round((price / maxPrice) * 100));
+    pricingHtml += `
+      <div class="pricing-row">
+        <span class="pricing-label">${name}</span>
+        <div class="pricing-bar-track">
+          <div class="pricing-bar-fill" style="width:${width}%"></div>
+        </div>
+        <span class="pricing-value">$${price}</span>
+      </div>`;
+  }
+  pricingHtml += '</div>';
+
+  // Understanding models
+  const understandingModels = (research.videoUnderstandingModels || []).slice(0, 3);
+  let underHtml = '<div class="understanding-list">';
+  for (const m of understandingModels) {
+    const benchmark = m.benchmark?.videoMME ? ` | VideoMME: ${m.benchmark.videoMME}%` : '';
+    underHtml += `
+      <div class="understanding-item">
+        <span class="understanding-name">${m.name}</span>
+        <span class="understanding-detail">${(m.capabilities || []).slice(0, 3).join(', ')}${benchmark}</span>
+      </div>`;
+  }
+  underHtml += '</div>';
+
+  // SaaS opportunities
+  const opportunities = research.marketAnalysis?.saasOpportunities || [];
+  let oppsHtml = '<ul class="saas-opps">';
+  for (const opp of opportunities.slice(0, 4)) {
+    oppsHtml += `<li>${opp}</li>`;
+  }
+  oppsHtml += '</ul>';
+
+  return `
+    <div class="video-llm-section">
+      <div class="video-llm-subsection">
+        <h3 class="video-llm-subtitle">${t.videoGenModels}</h3>
+        ${genHtml}
       </div>
-      ${p.votes ? `<span class="saas-votes">${p.votes}</span>` : ''}
-    </div>`).join('\n');
+      <div class="video-llm-subsection">
+        <h3 class="video-llm-subtitle">${t.pricingComparison}</h3>
+        ${pricingHtml}
+      </div>
+      <div class="video-llm-subsection">
+        <h3 class="video-llm-subtitle">${t.videoUnderstanding}</h3>
+        ${underHtml}
+      </div>
+      <div class="video-llm-subsection">
+        <h3 class="video-llm-subtitle">${t.saasOpportunities}</h3>
+        ${oppsHtml}
+      </div>
+    </div>`;
 }
 
 function buildArchiveList(entries) {
@@ -194,7 +262,7 @@ function build() {
   const improvements = loadJSON('data/improvements.json');
   const apiData = loadJSON('data/api-data.json');
   const quotes = loadJSON('data/quotes.json');
-  const saas = loadJSON('data/saas.json');
+  const videoLLM = loadJSON('data/video-llm-research.json');
   const i18n = loadJSON('data/i18n.json');
 
   const template = readFileSync(join(ROOT, 'src/templates/index.html'), 'utf-8');
@@ -222,7 +290,7 @@ function build() {
       .replace('{{TRENDING_SECTION}}', buildTrendingSection(trending))
       .replace('{{IMPROVEMENTS_SECTION}}', buildImprovementsSection(improvements))
       .replace('{{API_SECTION}}', buildAPISection(apiData))
-      .replace('{{SAAS_SECTION}}', buildSaaSSection(saas))
+      .replace('{{VIDEO_LLM_SECTION}}', buildVideoLLMSection(videoLLM, t))
       .replace('{{ARCHIVE_LIST}}', buildArchiveList(dailyLog.entries))
       .replace('{{TIMELINE_ENTRIES}}', buildTimeline(dailyLog.entries))
       .replace('{{LAST_UPDATED}}', metrics.last_updated)
@@ -303,20 +371,6 @@ function build() {
           </div>`).join('\n');
       }
 
-      let saasHtml = `<p class="muted-text">${t.noSaaS}</p>`;
-      const saasEntry = saas?.daily?.find(d => d.date === date);
-      if (saasEntry?.products?.length > 0) {
-        saasHtml = saasEntry.products.slice(0, 10).map((p, idx) => `
-          <div class="saas-item">
-            <span class="saas-rank">#${idx + 1}</span>
-            <div class="saas-info">
-              <span class="saas-name">${p.name}</span>
-              <span class="saas-tagline">${p.tagline || ''}</span>
-            </div>
-            ${p.votes ? `<span class="saas-votes">${p.votes}</span>` : ''}
-          </div>`).join('\n');
-      }
-
       const changesHtml = entry.changes.length > 0
         ? `<ul class="changes-list">${entry.changes.map(c => `<li>${c}</li>`).join('\n')}</ul>`
         : `<p class="muted-text">${t.noChanges}</p>`;
@@ -331,7 +385,6 @@ function build() {
         .replace('{{STATS_HTML}}', statsHtml)
         .replace('{{API_HTML}}', apiHtml)
         .replace('{{TRENDING_HTML}}', trendingHtml)
-        .replace('{{SAAS_HTML}}', saasHtml)
         .replace('{{CHANGES_HTML}}', changesHtml);
       dayHtml = applyTranslations(dayHtml, t);
 

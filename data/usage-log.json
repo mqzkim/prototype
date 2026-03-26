@@ -1,0 +1,112 @@
+{
+  "records": [
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-26T14:06:30.800Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-26T14:06:30.813Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-26T14:06:30.841Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-26T14:06:30.857Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-26T14:09:47.032Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-26T14:09:47.044Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 2,
+      "timestamp": "2026-03-26T14:09:47.080Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-26T14:09:47.093Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-26T14:09:54.126Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-26T14:09:54.135Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-26T14:09:54.164Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-26T14:09:54.173Z"
+    }
+  ]
+}
