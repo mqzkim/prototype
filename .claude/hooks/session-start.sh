@@ -18,3 +18,6 @@ npm run build
 
 # Verify everything works
 npm test
+
+# Design validation
+npm run validate:design

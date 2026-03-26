@@ -4,7 +4,7 @@
   "description": "Cloud-native daily service powered by Claude Code cron jobs",
   "type": "module",
   "scripts": {
-    "build": "node src/generators/build.js",
+    "build": "node src/generators/build.js && node scripts/validate-design.js",
     "daily": "node scripts/daily-update.js",
     "test": "node --test tests/build.test.js",
     "validate:design": "node scripts/validate-design.js"
