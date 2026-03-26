@@ -72,43 +72,107 @@ function validateSections(html, locale) {
   }
 }
 
-// ---- 2. Overflow Risk Patterns ----
+// ---- Helper: parse all CSS rules for a given class name ----
+function getCSSRulesForClass(css, className) {
+  const escaped = className.replace(/[-]/g, '\\-');
+  const ruleRegex = new RegExp(`\\.${escaped}[^{]*\\{([^}]+)\\}`, 'g');
+  let match;
+  let combined = '';
+  while ((match = ruleRegex.exec(css)) !== null) {
+    combined += match[1] + ';';
+  }
+  return combined;
+}
+
+function hasProps(ruleText, props) {
+  return props.every(p => ruleText.includes(p));
+}
+
+// ---- 2. Overflow Risk Patterns (Heuristic) ----
 function validateOverflow(html, locale) {
   console.log(`\n[${locale}] Overflow protection`);
 
   const styleMatch = html.match(/<style>([\s\S]*?)<\/style>/);
   const css = styleMatch ? styleMatch[1] : '';
 
-  // --- CSS-level checks: flex containers must have overflow control ---
-  const overflowContainers = [
-    ['feature-card', 'overflow'],
-    ['trending-info', 'overflow'],
-    ['trending-info', 'min-width'],
+  // ── A. Ellipsis triplet check ──
+  // text-overflow:ellipsis is USELESS without white-space:nowrap + overflow:hidden
+  // All three must be present together.
+  const ellipsisFields = [
+    'trending-name', 'trending-desc', 'trending-lang',
+    'saas-name', 'saas-tagline', 'saas-product', 'saas-item',
+    'archive-summary',
   ];
-  for (const [cls, prop] of overflowContainers) {
-    // Parse the specific CSS rule block for this class
-    const ruleRegex = new RegExp(`\\.${cls.replace('-', '\\-')}[^{]*\\{([^}]+)\\}`, 'g');
-    let ruleMatch;
-    let found = false;
-    while ((ruleMatch = ruleRegex.exec(css)) !== null) {
-      if (ruleMatch[1].includes(prop)) found = true;
+  for (const cls of ellipsisFields) {
+    const rules = getCSSRulesForClass(css, cls);
+    if (!rules) continue;
+    if (rules.includes('text-overflow')) {
+      // If ellipsis is declared, the full triplet MUST be present
+      const hasTriplet = hasProps(rules, ['white-space', 'overflow', 'text-overflow']);
+      check(`ellipsis triplet: .${cls} has nowrap+overflow+ellipsis`, hasTriplet);
     }
-    check(`CSS: .${cls} has ${prop}`, found);
   }
 
-  // --- Content-level checks: detect actual overflow risk in rendered HTML ---
+  // ── B. Flex-child info containers must prevent blowout ──
+  // When flex:1 is used for text, min-width:0 + overflow:hidden are required
+  const flexInfoFields = ['trending-info', 'saas-info'];
+  for (const cls of flexInfoFields) {
+    const rules = getCSSRulesForClass(css, cls);
+    if (!rules) continue;
+    check(
+      `flex-child: .${cls} has min-width:0 + overflow:hidden`,
+      hasProps(rules, ['min-width', 'overflow'])
+    );
+  }
 
-  // Extract all text content inside flex-child elements that should be truncated
-  const textFieldPatterns = [
-    { regex: /class="trending-name">([^<]*)</g, name: 'trending-name', maxLen: 80 },
-    { regex: /class="trending-desc">([^<]*)</g, name: 'trending-desc', maxLen: 120 },
-    { regex: /class="trending-lang">([^<]*)</g, name: 'trending-lang', maxLen: 15 },
-    { regex: /class="saas-name">([^<]*)</g, name: 'saas-name', maxLen: 60 },
-    { regex: /class="saas-tagline">([^<]*)</g, name: 'saas-tagline', maxLen: 120 },
-    { regex: /class="archive-summary">([^<]*)</g, name: 'archive-summary', maxLen: 80 },
+  // ── C. Flex row containers must clip overflow ──
+  const flexRowClasses = ['trending-repo', 'trending-item', 'saas-product', 'saas-item'];
+  for (const cls of flexRowClasses) {
+    if (!new RegExp(`class="[^"]*${cls}`).test(html)) continue;
+    const rules = getCSSRulesForClass(css, cls);
+    check(
+      `flex-row: .${cls} has overflow control`,
+      hasProps(rules, ['overflow'])
+    );
+  }
+
+  // ── D. Cards inside grid must clip children ──
+  // feature-card is inside feature-grid (50% width) — must have overflow:hidden
+  const cardContainers = ['feature-card'];
+  for (const cls of cardContainers) {
+    const rules = getCSSRulesForClass(css, cls);
+    if (!rules) continue;
+    check(
+      `card-container: .${cls} clips children (overflow:hidden)`,
+      rules.includes('overflow') && rules.includes('hidden')
+    );
+  }
+
+  // ── E. Flex-shrink protection on fixed-width elements ──
+  // Rank badges, meta containers should not shrink
+  const noShrinkFields = ['trending-rank', 'trending-meta', 'saas-rank'];
+  for (const cls of noShrinkFields) {
+    const rules = getCSSRulesForClass(css, cls);
+    if (!rules) continue;
+    const hasShrinkProtection = rules.includes('flex-shrink') || rules.includes('min-width');
+    check(
+      `flex-shrink: .${cls} is protected from shrinking`,
+      hasShrinkProtection
+    );
+  }
+
+  // ── F. Content-length risk detection ──
+  // Scan actual rendered text and verify CSS protection exists
+  const contentFields = [
+    { regex: /class="trending-name">([^<]*)</g, name: 'trending-name', maxLen: 60 },
+    { regex: /class="trending-desc">([^<]*)</g, name: 'trending-desc', maxLen: 80 },
+    { regex: /class="trending-lang">([^<]*)</g, name: 'trending-lang', maxLen: 12 },
+    { regex: /class="saas-name">([^<]*)</g, name: 'saas-name', maxLen: 50 },
+    { regex: /class="saas-tagline">([^<]*)</g, name: 'saas-tagline', maxLen: 80 },
+    { regex: /class="archive-summary">([^<]*)</g, name: 'archive-summary', maxLen: 60 },
   ];
 
-  for (const { regex, name, maxLen } of textFieldPatterns) {
+  for (const { regex, name, maxLen } of contentFields) {
     let match;
     const values = [];
     while ((match = regex.exec(html)) !== null) {
@@ -117,34 +181,17 @@ function validateOverflow(html, locale) {
     if (values.length === 0) continue;
 
     const longest = values.reduce((a, b) => a.length > b.length ? a : b, '');
-    // Check that CSS has ellipsis rule for this field
-    const ellipsisRegex = new RegExp(`\\.${name.replace('-', '\\-')}[^}]*text-overflow\\s*:\\s*ellipsis`);
-    const hasEllipsis = ellipsisRegex.test(css);
-
     if (longest.length > maxLen) {
-      // Long content exists — CSS MUST have ellipsis protection
+      // Long content detected — FULL overflow chain must be present
+      const rules = getCSSRulesForClass(css, name);
+      const hasFull = hasProps(rules, ['white-space', 'overflow', 'text-overflow']);
       check(
-        `${name}: long content (${longest.length} chars) has text-overflow:ellipsis`,
-        hasEllipsis
+        `content-risk: .${name} (${longest.length}ch > ${maxLen}) has full overflow chain`,
+        hasFull
       );
     } else {
-      check(`${name}: content length OK (max ${longest.length}/${maxLen} chars)`, true);
+      check(`content-ok: .${name} (${longest.length}/${maxLen} chars)`, true);
     }
-  }
-
-  // --- Structural check: flex rows with text must have parent overflow:hidden ---
-  const flexRowClasses = ['trending-repo', 'trending-item', 'saas-product', 'saas-item'];
-  for (const cls of flexRowClasses) {
-    const rowRegex = new RegExp(`class="[^"]*${cls}[^"]*"`);
-    if (!rowRegex.test(html)) continue;
-
-    const ruleRegex = new RegExp(`\\.${cls.replace('-', '\\-')}[^{]*\\{([^}]+)\\}`, 'g');
-    let ruleMatch;
-    let hasOverflow = false;
-    while ((ruleMatch = ruleRegex.exec(css)) !== null) {
-      if (ruleMatch[1].includes('overflow')) hasOverflow = true;
-    }
-    check(`CSS: .${cls} row has overflow control`, hasOverflow);
   }
 }
 
