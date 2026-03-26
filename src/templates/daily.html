@@ -44,16 +44,29 @@
       font-size:2.2rem; font-weight:800;
       background: var(--gradient-main);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      letter-spacing: -0.02em;
     }
+    .day-meta { display:flex; align-items:center; gap:0.6rem; margin-top:0.4rem; }
     .day-version {
-      font-family:'JetBrains Mono',monospace; font-size:0.8rem;
-      color:var(--muted); margin-top:0.3rem;
+      font-family:'JetBrains Mono',monospace; font-size:0.75rem;
+      color:var(--muted);
+    }
+    .day-version-badge {
+      display:inline-block; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
+      padding:0.15rem 0.55rem; border-radius:8px;
+      background:rgba(139,92,246,0.1); color:var(--violet);
+      border:1px solid rgba(139,92,246,0.2);
     }
 
     /* Glow card */
     .glow-card {
       background:var(--card); border:1px solid var(--border);
       border-radius:16px; backdrop-filter:blur(12px); position:relative;
+      transition: transform 0.2s ease-out, border-color 0.2s ease-out;
+    }
+    .glow-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(139, 92, 246, 0.2);
     }
     .glow-card::before {
       content:''; position:absolute; inset:-1px; border-radius:17px; padding:1px;
@@ -83,8 +96,8 @@
     .til-title { font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:0.4rem; }
     .til-content { font-size:0.85rem; color:var(--muted); line-height:1.6; }
 
-    /* Stats grid */
-    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.8rem; }
+    /* Stats grid — 3-col for daily focus (commits / lines / files) */
+    .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.8rem; }
     @media (max-width:640px) { .stats-grid { grid-template-columns:repeat(2,1fr); } }
     .stat-item { text-align:center; }
     .stat-num {
@@ -171,7 +184,9 @@
 
     <div class="day-header">
       <div class="day-date">{{DATE}}</div>
-      <div class="day-version">{{VERSION}}</div>
+      <div class="day-meta">
+        <span class="day-version-badge">{{VERSION}}</span>
+      </div>
     </div>
 
     <div class="shimmer-line"></div>

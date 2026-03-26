@@ -62,12 +62,20 @@
     }
 
     /* ---- Nav ---- */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 5, 8, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
     nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 1.25rem 0;
-      border-bottom: 1px solid var(--border);
     }
     .logo {
       font-size: 1.25rem;
@@ -241,9 +249,13 @@
       border-radius: 12px;
       padding: 1.25rem;
       text-align: center;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
     }
-    .model-card:hover { border-color: rgba(6, 182, 212, 0.3); }
+    .model-card:hover {
+      border-color: rgba(6, 182, 212, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(6, 182, 212, 0.06);
+    }
     .model-name {
       font-size: 0.95rem;
       font-weight: 700;
@@ -494,6 +506,7 @@
 </head>
 <body>
 
+<div class="nav-wrapper">
 <div class="container">
   <nav>
     <div class="logo">VideoLLM</div>
@@ -505,6 +518,10 @@
       <a href="https://prototype-qong.onrender.com/v1/models" target="_blank" class="btn btn-primary" style="padding:0.5rem 1.25rem;font-size:0.8rem;">Get API Key</a>
     </div>
   </nav>
+</div>
+</div>
+
+<div class="container">
 
   <!-- Hero -->
   <section class="hero">

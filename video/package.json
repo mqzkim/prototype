@@ -1,0 +1,22 @@
+{
+  "name": "prototype-video",
+  "version": "0.1.0",
+  "description": "Build in Public × Video LLM SaaS — 60s shortform summary video",
+  "scripts": {
+    "dev": "npx remotion studio",
+    "build": "npx remotion bundle",
+    "render": "npx remotion render BuildInPublic output.mp4 --codec h264",
+    "render:gif": "npx remotion render BuildInPublic output.gif"
+  },
+  "dependencies": {
+    "remotion": "^4.0.0",
+    "@remotion/transitions": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@remotion/eslint-config": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
