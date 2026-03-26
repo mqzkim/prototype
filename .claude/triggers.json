@@ -4,16 +4,16 @@
   "triggers": [
     {
       "name": "daily-update",
-      "description": "Daily service update - adds changelog entry, updates metrics, rebuilds site",
+      "description": "Daily service update - collects data, rebuilds site, commits to git",
       "schedule": "0 9 * * *",
-      "prompt": "Run the daily update process:\n1. Run `npm run daily` to update data/daily-log.json and data/metrics.json\n2. Run `npm run build` to regenerate the site\n3. Run `npm test` to verify everything works\n4. If tests pass, commit the changes with message 'daily: update for YYYY-MM-DD'\n5. Push to the main branch\n\nIf you notice any issues or improvements that could be made to the codebase, create a new entry in data/daily-log.json documenting what you improved.",
+      "prompt": "Run the full daily update pipeline. This MUST commit data changes to git so they accumulate over time.\n\n1. Run `npm run daily` — this runs all 5 features:\n   - Select dev quote of the day\n   - Generate TIL from code analysis\n   - Fetch GitHub trending repos\n   - Log git-based improvements\n   - Fetch exchange rates & Seoul weather\n   - Update changelog, metrics, snapshots\n\n2. Run `npm run build` to regenerate the site\n\n3. Run `npm test` to verify everything works\n\n4. Stage ALL data files: `git add data/`\n\n5. Commit with descriptive message: 'daily: YYYY-MM-DD — quote by [author]'\n   Include a summary of what changed in the commit body.\n\n6. Push to main branch\n\nIMPORTANT: The data/ directory contains the accumulated history. Each day's data MUST be committed to git so it persists. The GitHub Pages site is rebuilt from this data on every push.",
       "branch": "main"
     },
     {
       "name": "weekly-review",
       "description": "Weekly code review and improvement",
       "schedule": "0 10 * * 1",
-      "prompt": "Perform a weekly code review of this project:\n1. Review all source code for bugs, improvements, and new feature opportunities\n2. Check if any dependencies need updating\n3. Look for code quality improvements\n4. Add at least one meaningful improvement to the codebase\n5. Update data/daily-log.json with what you changed\n6. Run tests, commit, and push\n\nFocus on making the service more useful and robust each week.",
+      "prompt": "Perform a weekly code review and make at least one real improvement:\n\n1. Review all source code for bugs, improvements, and new feature opportunities\n2. Check data/til.json — if there are patterns not yet covered, the TIL system is working\n3. Check data/improvements.json — are commit categories accurate?\n4. Look for UI improvements in src/templates/index.html\n5. Add at least one meaningful improvement to the codebase\n6. Update data/daily-log.json with what you changed\n7. Run `npm test`, commit ALL changes (code + data), and push to main\n\nFocus on making the dashboard more informative and the cron pipeline more robust.",
       "branch": "main"
     }
   ]
