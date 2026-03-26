@@ -65,6 +65,24 @@ describe('data files', () => {
     assert.ok(data.stats);
     assert.ok(typeof data.stats.total_improvements === 'number');
   });
+
+  it('video-llm-research.json is valid', () => {
+    const data = loadJSON('video-llm-research.json');
+    assert.ok(data.metadata);
+    assert.ok(data.metadata.title);
+    assert.ok(Array.isArray(data.videoGenerationModels));
+    assert.ok(data.videoGenerationModels.length >= 3);
+    assert.ok(Array.isArray(data.openSourceModels));
+    assert.ok(data.openSourceModels.length >= 3);
+    assert.ok(Array.isArray(data.videoUnderstandingModels));
+    assert.ok(data.marketAnalysis);
+    assert.ok(data.pricingComparison);
+    for (const model of data.videoGenerationModels) {
+      assert.ok(model.name);
+      assert.ok(model.provider);
+      assert.ok(model.type);
+    }
+  });
 });
 
 describe('build', () => {
@@ -92,6 +110,9 @@ describe('build', () => {
     assert.ok(html.includes('Live Data'));
     assert.ok(html.includes('Changelog'));
     assert.ok(html.includes('lang="en"'));
+    assert.ok(html.includes('Video LLM Research'));
+    assert.ok(html.includes('Veo 3.1'));
+    assert.ok(html.includes('Kling 3.0'));
   });
 
   it('Korean page contains translated labels', () => {
@@ -101,6 +122,7 @@ describe('build', () => {
     assert.ok(html.includes('오늘의 명언'));
     assert.ok(html.includes('오늘 배운 것'));
     assert.ok(html.includes('일별 아카이브'));
+    assert.ok(html.includes('비디오 LLM 리서치'));
   });
 
   it('generates daily pages per locale', () => {
