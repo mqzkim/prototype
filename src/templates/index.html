@@ -259,6 +259,180 @@
       max-width: 100%;
     }
 
+    /* ---- Feature Grid (2-col) ---- */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 640px) {
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+    .feature-card { padding: 1.3rem 1.4rem; }
+    .feature-card-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    /* Quote */
+    .quote-text {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.5;
+      border: none;
+      padding: 0;
+      margin-bottom: 0.6rem;
+    }
+    .quote-author {
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--violet);
+      font-style: normal;
+    }
+
+    /* TIL */
+    .til-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(139, 92, 246, 0.12);
+      color: var(--violet);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+    .til-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .til-content {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 0.4rem;
+    }
+    .til-date {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+    }
+
+    /* Trending */
+    .trending-repo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .trending-repo:last-child { border-bottom: none; }
+    .trending-rank {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--cyan);
+      font-weight: 700;
+      min-width: 24px;
+      text-shadow: 0 0 8px var(--glow-cyan);
+    }
+    .trending-info { flex: 1; min-width: 0; }
+    .trending-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .trending-desc {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .trending-meta {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .trending-lang {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--violet);
+    }
+    .trending-stars {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--amber);
+    }
+
+    /* Improvements */
+    .imp-stats {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .imp-stat {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .imp-stat .num {
+      font-size: 1.3rem;
+      font-weight: 800;
+      display: block;
+      color: var(--emerald);
+      text-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+    }
+
+    /* API Dashboard */
+    .api-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+    }
+    @media (max-width: 640px) {
+      .api-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .api-card { text-align: center; }
+    .api-card-title {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .api-card-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cyan);
+      text-shadow: 0 0 10px var(--glow-cyan);
+    }
+    .api-card-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+    .muted-text {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
     /* ---- Timeline ---- */
     .timeline-section { margin: 2rem 0; }
     .section-header {
@@ -412,6 +586,38 @@
         {{LOC_BARS}}
       </div>
     </section>
+
+    <!-- Quote + TIL -->
+    <div class="feature-grid">
+      <div class="feature-card glow-card">
+        <div class="feature-card-title">Quote of the Day</div>
+        {{QUOTE_SECTION}}
+      </div>
+      <div class="feature-card glow-card">
+        <div class="feature-card-title">Today I Learned</div>
+        {{TIL_SECTION}}
+      </div>
+    </div>
+
+    <!-- API Dashboard -->
+    <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
+      <div class="feature-card-title">Live Data</div>
+      {{API_SECTION}}
+    </section>
+
+    <!-- Trending + Improvements -->
+    <div class="feature-grid">
+      <div class="feature-card glow-card">
+        <div class="feature-card-title">GitHub Trending</div>
+        {{TRENDING_SECTION}}
+      </div>
+      <div class="feature-card glow-card">
+        <div class="feature-card-title">Auto Improvements</div>
+        <div class="imp-stats">
+          {{IMPROVEMENTS_SECTION}}
+        </div>
+      </div>
+    </div>
 
     <section class="timeline-section">
       <h2 class="section-header">Changelog</h2>
