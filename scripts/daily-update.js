@@ -7,7 +7,6 @@ import { generateTIL } from './generate-til.js';
 import { fetchTrending } from './fetch-trending.js';
 import { logImprovements } from './log-improvement.js';
 import { fetchAPIs } from './fetch-apis.js';
-import { fetchSaaS } from './fetch-saas.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -102,9 +101,12 @@ async function dailyUpdate() {
   try { await fetchAPIs(); console.log('[api-data] Fetched'); }
   catch (e) { console.warn('[api-data] Failed:', e.message); }
 
-  // 7. SaaS / Indie Products
-  try { await fetchSaaS(); console.log('[saas] Fetched'); }
-  catch (e) { console.warn('[saas] Failed:', e.message); }
+  // 7. Evaluate codebase against RULES.md
+  try {
+    const { evaluateRules } = await import('./evaluate-rules.js');
+    const result = await evaluateRules();
+    console.log(`[evaluation] Score: ${result.totalScore}/${result.maxScore} (${result.percentage}%) ${result.passing ? 'PASS' : 'FAIL'}`);
+  } catch (e) { console.warn('[evaluation] Failed:', e.message); }
 
   console.log('\n=== Daily Update Complete ===');
 }

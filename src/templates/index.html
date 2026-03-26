@@ -483,6 +483,146 @@
       font-style: italic;
     }
 
+    /* ---- Video LLM Section ---- */
+    .video-llm-section { display: flex; flex-direction: column; gap: 1.5rem; }
+    .video-llm-subsection {}
+    .video-llm-subtitle {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--cyan);
+      margin-bottom: 0.6rem;
+      text-shadow: 0 0 8px var(--glow-cyan);
+    }
+    .video-models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+    .video-model-card {
+      padding: 0.7rem 0.8rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+    }
+    .video-model-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
+    }
+    .video-model-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .model-badge {
+      font-size: 0.55rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .model-badge.closed {
+      background: rgba(244, 63, 94, 0.12);
+      color: var(--rose);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+    }
+    .model-badge.open {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--emerald);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .video-model-meta {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 0.3rem;
+    }
+    .video-model-res, .video-model-price {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+    }
+    .video-model-price { color: var(--amber); }
+    .video-model-caps {
+      font-size: 0.65rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .pricing-bars { display: flex; flex-direction: column; gap: 0.35rem; }
+    .pricing-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pricing-label {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+      min-width: 110px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pricing-bar-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .pricing-bar-fill {
+      height: 100%;
+      background: var(--gradient-main);
+      border-radius: 4px;
+      box-shadow: 0 0 6px var(--glow-violet);
+    }
+    .pricing-value {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cyan);
+      min-width: 40px;
+      text-align: right;
+    }
+    .understanding-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .understanding-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .understanding-item:last-child { border-bottom: none; }
+    .understanding-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .understanding-detail {
+      font-size: 0.62rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+      text-align: right;
+    }
+    .saas-opps {
+      list-style: none;
+      padding: 0;
+    }
+    .saas-opps li {
+      padding: 0.3rem 0;
+      font-size: 0.78rem;
+      color: var(--text);
+    }
+    .saas-opps li::before {
+      content: ">";
+      color: var(--emerald);
+      margin-right: 0.5rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      text-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    }
+
     /* ---- Timeline ---- */
     .timeline-section { margin: 2rem 0; }
     .section-header {
@@ -708,6 +848,12 @@
         </div>
       </div>
     </div>
+
+    <!-- Video LLM Research -->
+    <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
+      <div class="feature-card-title">{{t.videoLLM}}</div>
+      {{VIDEO_LLM_SECTION}}
+    </section>
 
     <!-- Indie SaaS -->
     <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">

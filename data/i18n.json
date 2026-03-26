@@ -34,9 +34,19 @@
     "noApiData": "No API data",
     "noTrending": "No trending data",
     "noChanges": "No changes recorded",
+    "partOf": "Part of",
+    "videoLLM": "Video LLM Research",
+    "videoGenModels": "Generation Models",
+    "videoUnderstanding": "Understanding Models",
+    "pricingComparison": "Pricing ($/sec)",
+    "saasOpportunities": "SaaS Opportunities",
+    "openSource": "Open Source",
+    "closedSource": "Closed",
+    "perSec": "/sec",
+    "resolution": "Resolution",
+    "capabilities": "Capabilities",
     "indieSaaS": "Indie SaaS",
-    "noSaaS": "No SaaS data yet",
-    "partOf": "Part of"
+    "noSaaS": "No SaaS data yet"
   },
   "ko": {
     "lang": "ko",
@@ -73,8 +83,18 @@
     "noApiData": "API 데이터 없음",
     "noTrending": "트렌딩 데이터 없음",
     "noChanges": "기록된 변경사항 없음",
+    "partOf": "프로젝트:",
+    "videoLLM": "비디오 LLM 리서치",
+    "videoGenModels": "생성 모델",
+    "videoUnderstanding": "이해 모델",
+    "pricingComparison": "가격 비교 ($/초)",
+    "saasOpportunities": "SaaS 기회",
+    "openSource": "오픈소스",
+    "closedSource": "클로즈드",
+    "perSec": "/초",
+    "resolution": "해상도",
+    "capabilities": "기능",
     "indieSaaS": "인디 SaaS",
-    "noSaaS": "SaaS 데이터 없음",
-    "partOf": "프로젝트:"
+    "noSaaS": "SaaS 데이터 없음"
   }
 }

@@ -1,0 +1,469 @@
+{
+  "metadata": {
+    "title": "Video LLM SaaS - Cost Analysis & Scaling Plan",
+    "date": "2026-03-26",
+    "version": "1.0"
+  },
+  "costStructure": {
+    "layer1_infrastructure": {
+      "description": "API 프록시 서버 (우리 코드가 실행되는 곳)",
+      "options": {
+        "cloudflareWorkers": {
+          "free": { "requests": "100K/day", "cpu": "10ms/req", "cost": "$0" },
+          "paid": { "requests": "10M/mo included", "overage": "$0.50/1M req", "base": "$5/mo" },
+          "enterprise": "커스텀 (보통 $3K+/mo)"
+        },
+        "vercel": {
+          "pro": { "base": "$20/mo", "bandwidth": "1TB included", "overage": "$0.15/GB" },
+          "enterprise": "$3K-6K/mo"
+        }
+      },
+      "recommendation": "Cloudflare Workers - 콜드스타트 <5ms, 무제한 대역폭, 월 $5"
+    },
+    "layer2_videoApiCosts": {
+      "description": "실제 비디오 생성 API 호출 비용 (유저 요청당 발생)",
+      "perSecondCosts": {
+        "kling_3.0": { "720p": 0.01, "1080p": 0.02, "4k": 0.03 },
+        "seedance_2.0": { "720p": 0.025, "1080p": 0.05 },
+        "veo_3.1": { "720p": 0.15, "1080p": 0.20, "4k_audio": 0.60 },
+        "runway_gen4": { "1080p": 0.06 },
+        "wan_2.2_fal": { "720p": 0.05, "1080p": 0.10 }
+      },
+      "typicalJobCost": {
+        "5sec_720p_kling": "$0.05",
+        "5sec_1080p_kling": "$0.10",
+        "10sec_1080p_veo": "$2.00",
+        "10sec_1080p_kling": "$0.20",
+        "10sec_4k_veo_audio": "$6.00"
+      }
+    },
+    "layer3_videoUnderstanding": {
+      "description": "비디오 이해/분석 API 호출 비용",
+      "perMTok": {
+        "gemini_3_pro": { "input": 2.00, "output": 12.00 },
+        "gpt4o": { "input": 0.25, "output": 2.00 }
+      },
+      "typicalAnalysisCost": {
+        "30sec_video_gemini": "$0.15-0.30 (영상 길이/해상도에 따라)",
+        "30sec_video_gpt4o": "$0.03-0.08"
+      }
+    }
+  },
+  "pricingTiers": {
+    "model": "하이브리드 (구독 + 사용량 기반)",
+    "tiers": [
+      {
+        "name": "Free",
+        "price": "$0/mo",
+        "included": {
+          "generations": "5회/월",
+          "maxDuration": "5초",
+          "maxResolution": "720p",
+          "models": ["kling"],
+          "understanding": "10회/월"
+        },
+        "purpose": "체험 및 온보딩",
+        "ourCost": "~$0.25/user/mo (5 x $0.05)",
+        "note": "Kling 720p만 허용하여 비용 최소화"
+      },
+      {
+        "name": "Starter",
+        "price": "$19/mo",
+        "included": {
+          "generations": "50회/월 (= 250초 크레딧)",
+          "maxDuration": "10초",
+          "maxResolution": "1080p",
+          "models": ["kling", "seedance", "wan"],
+          "understanding": "100회/월",
+          "overageRate": "$0.15/생성"
+        },
+        "purpose": "개인 크리에이터, 소규모 프로젝트",
+        "ourCost": "~$5-10/user/mo",
+        "margin": "47-74%"
+      },
+      {
+        "name": "Pro",
+        "price": "$79/mo",
+        "included": {
+          "generations": "250회/월 (= 1,250초 크레딧)",
+          "maxDuration": "15초",
+          "maxResolution": "4K",
+          "models": ["kling", "seedance", "veo", "runway", "wan"],
+          "understanding": "500회/월",
+          "smartRouting": true,
+          "overageRate": "$0.10/생성"
+        },
+        "purpose": "프로 크리에이터, 에이전시",
+        "ourCost": "~$25-40/user/mo",
+        "margin": "49-68%"
+      },
+      {
+        "name": "Enterprise",
+        "price": "$299/mo (또는 커스텀)",
+        "included": {
+          "generations": "1,000회/월",
+          "maxDuration": "20초+",
+          "maxResolution": "4K",
+          "models": "전체",
+          "understanding": "무제한",
+          "smartRouting": true,
+          "priorityQueue": true,
+          "dedicatedSupport": true,
+          "sla": "99.9%",
+          "overageRate": "$0.07/생성"
+        },
+        "purpose": "기업, 대규모 콘텐츠 팀",
+        "ourCost": "~$80-150/user/mo",
+        "margin": "50-73%"
+      }
+    ]
+  },
+  "scalingPlan": {
+    "phase1_mvp": {
+      "stage": "Phase 1: MVP",
+      "users": "0-500",
+      "mrr": "$0-5K",
+      "infrastructure": {
+        "proxy": "Cloudflare Workers Free → Paid ($5/mo)",
+        "db": "Cloudflare D1 (SQLite, Free tier 5M rows)",
+        "auth": "Clerk/Auth0 Free tier",
+        "monitoring": "Cloudflare Analytics (무료)"
+      },
+      "totalInfraCost": "$5-20/mo",
+      "strategy": "API 프록시만. Kling + Gemini로 시작. 최소 비용으로 PMF 검증",
+      "keyMetric": "DAU, 생성 완료율, 재방문율"
+    },
+    "phase2_growth": {
+      "stage": "Phase 2: Growth",
+      "users": "500-5,000",
+      "mrr": "$5K-50K",
+      "infrastructure": {
+        "proxy": "Cloudflare Workers Paid ($5/mo + $0.50/M req)",
+        "db": "Planetscale 또는 Supabase ($25/mo)",
+        "auth": "Clerk Pro ($25/mo)",
+        "queue": "Cloudflare Queues ($0.40/M messages)",
+        "monitoring": "Grafana Cloud Free + Sentry ($26/mo)"
+      },
+      "totalInfraCost": "$80-200/mo",
+      "strategy": "전체 모델 연동. 스마트 라우팅 활성화. 비용 대시보드 제공",
+      "keyMetric": "ARPU, Churn Rate, Net Revenue Retention"
+    },
+    "phase3_scale": {
+      "stage": "Phase 3: Scale",
+      "users": "5,000-50,000",
+      "mrr": "$50K-500K",
+      "infrastructure": {
+        "proxy": "Cloudflare Workers Enterprise",
+        "db": "PlanetScale Pro ($39/mo+)",
+        "gpu": "RunPod Serverless (HunyuanVideo 셀프호스팅 시작)",
+        "cdn": "Cloudflare R2 (생성된 비디오 캐싱, $0.015/GB/mo)",
+        "queue": "Cloudflare Queues + Durable Objects"
+      },
+      "totalInfraCost": "$500-3K/mo + GPU 비용",
+      "strategy": "오픈소스 모델 셀프호스팅으로 마진 확대. 볼륨 디스카운트 협상",
+      "transitionTrigger": "API 비용이 MRR의 40% 초과 시 셀프호스팅 전환 검토",
+      "gpuCostIfSelfHosted": {
+        "runpod_a100_ondemand": "$1.19/hr (~$860/mo always-on)",
+        "modal_a100_serverless": "$2.10/hr (사용량 비례)",
+        "breakeven": "월 4,300회 이상 생성 시 셀프호스팅이 API보다 저렴"
+      }
+    },
+    "phase4_enterprise": {
+      "stage": "Phase 4: Enterprise",
+      "users": "50,000+",
+      "mrr": "$500K+",
+      "infrastructure": {
+        "proxy": "멀티 리전 Cloudflare Workers",
+        "gpu": "전용 GPU 클러스터 (Lambda Labs H100 $2.69/hr)",
+        "storage": "Cloudflare R2 + 멀티 리전 복제",
+        "infra": "Kubernetes (GPU 오토스케일링)"
+      },
+      "totalInfraCost": "$10K-50K/mo",
+      "strategy": "프라이빗 배포 옵션 제공. 모델 파인튜닝 서비스. GPU 리저브드 인스턴스",
+      "keyMetric": "Enterprise ACV, Logo Retention"
+    }
+  },
+  "transitionDecisionMatrix": {
+    "description": "유저 수 / 생성 볼륨 기준 인프라 전환 기준",
+    "decisions": [
+      {
+        "trigger": "월 생성 1,000회 미만",
+        "action": "100% API 프록시",
+        "reason": "GPU 유지 비용 대비 API 호출이 저렴"
+      },
+      {
+        "trigger": "월 생성 1,000-5,000회",
+        "action": "API 프록시 유지 + 볼륨 할인 협상",
+        "reason": "셀프호스팅 전환 비용 대비 API 할인이 효과적"
+      },
+      {
+        "trigger": "월 생성 5,000회+ 또는 API 비용 > MRR 35%",
+        "action": "오픈소스 모델(HunyuanVideo) 셀프호스팅 시작",
+        "reason": "RunPod A100 $860/mo로 무제한 생성 가능",
+        "expectedSaving": "API 비용 40-60% 절감"
+      },
+      {
+        "trigger": "월 생성 20,000회+ 또는 MAU 10,000+",
+        "action": "하이브리드 (저가=셀프호스팅, 고품질=API)",
+        "reason": "Kling/Veo는 API, 기본 생성은 HunyuanVideo/Wan 셀프호스팅"
+      },
+      {
+        "trigger": "월 생성 100,000회+ 또는 Enterprise 계약",
+        "action": "전용 GPU 클러스터 + 리저브드 인스턴스",
+        "reason": "온디맨드 대비 40-60% 절감. SLA 보장 가능"
+      }
+    ]
+  },
+  "unitEconomics": {
+    "exampleScenarios": [
+      {
+        "scenario": "Starter 유저 1명 / 월 50회 생성 (5초 1080p Kling 기준)",
+        "revenue": "$19",
+        "apiCost": "$5.00 (50 x $0.10)",
+        "infraCost": "$0.02 (할당 비용)",
+        "grossProfit": "$13.98",
+        "grossMargin": "73.6%"
+      },
+      {
+        "scenario": "Pro 유저 1명 / 월 250회 생성 (혼합 모델 평균 $0.15/회)",
+        "revenue": "$79",
+        "apiCost": "$37.50 (250 x $0.15)",
+        "infraCost": "$0.10",
+        "grossProfit": "$41.40",
+        "grossMargin": "52.4%"
+      },
+      {
+        "scenario": "Enterprise 유저 1명 / 월 1,000회 생성 (셀프호스팅 혼합)",
+        "revenue": "$299",
+        "apiCost": "$80 (400회 API) + $43 (600회 셀프호스팅 GPU 할당)",
+        "infraCost": "$2.00",
+        "grossProfit": "$174",
+        "grossMargin": "58.2%"
+      }
+    ],
+    "targetMetrics": {
+      "grossMargin": "50-70%",
+      "ltv_cac_ratio": ">3.0",
+      "paybackPeriod": "<6개월",
+      "churnRate": "<5%/월"
+    }
+  },
+  "monthlyBurnProjection": {
+    "month1_100users": {
+      "users": 100, "paying": 10,
+      "mrr": "$190",
+      "apiCosts": "$50",
+      "infra": "$5",
+      "totalCost": "$55",
+      "netMargin": "$135"
+    },
+    "month6_1000users": {
+      "users": 1000, "paying": 100,
+      "mrr": "$3,200",
+      "apiCosts": "$800",
+      "infra": "$80",
+      "totalCost": "$880",
+      "netMargin": "$2,320"
+    },
+    "month12_5000users": {
+      "users": 5000, "paying": 500,
+      "mrr": "$18,500",
+      "apiCosts": "$4,500",
+      "infra": "$500",
+      "gpuSelfHosted": "$860",
+      "totalCost": "$5,860",
+      "netMargin": "$12,640"
+    },
+    "month24_20000users": {
+      "users": 20000, "paying": 2000,
+      "mrr": "$82,000",
+      "apiCosts": "$12,000",
+      "infra": "$3,000",
+      "gpuSelfHosted": "$5,000",
+      "totalCost": "$20,000",
+      "netMargin": "$62,000"
+    }
+  },
+  "deploymentPlan": {
+    "description": "유저 수 기반 인프라 배포 단계별 플랜. GitHub Pages(대시보드) + API 서버(별도 호스팅) 2-tier 구조",
+    "phases": [
+      {
+        "phase": "Phase 0: 프로토타입",
+        "users": "1-10 (개발자/내부 테스트)",
+        "mrr": "$0",
+        "dashboard": {
+          "platform": "GitHub Pages",
+          "cost": "$0",
+          "note": "이미 deploy.yml로 자동 배포 중"
+        },
+        "apiServer": {
+          "platform": "로컬 / Claude Code 환경",
+          "cost": "$0",
+          "how": "npm start (port 3000)",
+          "limits": "세션 종료 시 서버도 종료"
+        },
+        "db": "data/*.json (git-tracked)",
+        "totalCost": "$0/mo",
+        "action": "기능 검증, API 테스트, 피드백 수집",
+        "transitionTrigger": "외부 사용자 접근 필요 시 Phase 1로"
+      },
+      {
+        "phase": "Phase 1: MVP 공개",
+        "users": "10-100",
+        "mrr": "$0-500",
+        "dashboard": {
+          "platform": "GitHub Pages",
+          "cost": "$0",
+          "url": "https://mqzkim.github.io/prototype/"
+        },
+        "apiServer": {
+          "platform": "Render.com (Free)",
+          "cost": "$0",
+          "how": "GitHub 연동 → Build: npm install, Start: npm start",
+          "url": "https://prototype-api.onrender.com",
+          "limits": "750시간/월, 비활성 15분 후 sleep, 콜드스타트 30-60초",
+          "specs": "512MB RAM, 0.1 CPU"
+        },
+        "db": "data/*.json + Render Disk (영속 스토리지)",
+        "auth": "Clerk Free (500 MAU)",
+        "monitoring": "Render 내장 로그",
+        "totalCost": "$0/mo",
+        "action": "초기 사용자 온보딩, PMF 검증, 무료 티어만 운영",
+        "transitionTrigger": "콜드스타트 불만 또는 유료 사용자 10명+ 시 Phase 2로"
+      },
+      {
+        "phase": "Phase 2: 유료 전환",
+        "users": "100-1,000",
+        "mrr": "$500-5K",
+        "dashboard": {
+          "platform": "GitHub Pages",
+          "cost": "$0"
+        },
+        "apiServer": {
+          "platform": "Render.com Starter ($7/mo) 또는 Railway Hobby ($5/mo + 사용량)",
+          "cost": "$7-15/mo",
+          "how": "항상 활성(no sleep), 자동 배포, 커스텀 도메인",
+          "specs": "512MB-1GB RAM, 0.5 CPU",
+          "expectedLoad": "~1,000 req/day"
+        },
+        "db": "Render PostgreSQL Free (256MB) 또는 Supabase Free",
+        "auth": "Clerk Pro ($25/mo, 10K MAU)",
+        "monitoring": "Sentry Free + Render 로그",
+        "totalCost": "$32-45/mo",
+        "action": "Starter/Pro 티어 활성화, Stripe 결제 연동, 온보딩 자동화",
+        "transitionTrigger": "응답 지연 증가 또는 MAU 1,000+ 시 Phase 3로"
+      },
+      {
+        "phase": "Phase 3: 성장",
+        "users": "1,000-5,000",
+        "mrr": "$5K-30K",
+        "dashboard": {
+          "platform": "GitHub Pages + Cloudflare CDN",
+          "cost": "$0"
+        },
+        "apiServer": {
+          "platform": "Fly.io (글로벌 엣지) 또는 Render Pro ($25/mo)",
+          "cost": "$25-85/mo",
+          "how": "멀티 리전 (US + EU + Asia), 오토스케일링",
+          "specs": "1-2GB RAM, 1-2 CPU, 2-3 인스턴스",
+          "expectedLoad": "~10,000 req/day"
+        },
+        "db": "PlanetScale ($39/mo) 또는 Supabase Pro ($25/mo)",
+        "queue": "Redis (Upstash Free → $10/mo)",
+        "auth": "Clerk Pro ($25/mo)",
+        "monitoring": "Grafana Cloud Free + Sentry ($26/mo)",
+        "cdn": "Cloudflare R2 (비디오 캐싱, $0.015/GB/mo)",
+        "totalCost": "$130-250/mo",
+        "action": "글로벌 확장, 레이트 리밋 Redis로 이전, 비디오 결과 캐싱",
+        "transitionTrigger": "단일 서버 한계 또는 MAU 5,000+ 시 Phase 4로"
+      },
+      {
+        "phase": "Phase 4: 스케일",
+        "users": "5,000-50,000",
+        "mrr": "$30K-300K",
+        "dashboard": {
+          "platform": "Cloudflare Pages (GitHub Pages 대체)",
+          "cost": "$0-20/mo"
+        },
+        "apiServer": {
+          "platform": "AWS ECS Fargate 또는 Fly.io Scale",
+          "cost": "$200-800/mo",
+          "how": "컨테이너 오케스트레이션, 로드밸런서, 오토스케일 3-10 인스턴스",
+          "specs": "2GB RAM, 2 CPU per instance"
+        },
+        "gpu": {
+          "platform": "RunPod Serverless (오픈소스 모델 셀프호스팅 시작)",
+          "cost": "$860-3,000/mo",
+          "models": "HunyuanVideo 1.5 (A100), Wan 2.2 (A10G)"
+        },
+        "db": "PlanetScale Pro ($99/mo) + Redis Cluster ($50/mo)",
+        "auth": "Clerk Business ($100/mo, 100K MAU)",
+        "monitoring": "Datadog ($23/host/mo) 또는 Grafana Pro ($49/mo)",
+        "cdn": "Cloudflare Pro ($20/mo) + R2",
+        "totalCost": "$1,500-5,000/mo",
+        "action": "하이브리드 모델 (오픈소스 셀프호스팅 + 상용 API), Enterprise 티어 런칭",
+        "transitionTrigger": "Enterprise 계약 3건+ 또는 MRR $100K+ 시 Phase 5로"
+      },
+      {
+        "phase": "Phase 5: 엔터프라이즈",
+        "users": "50,000+",
+        "mrr": "$300K+",
+        "dashboard": {
+          "platform": "Cloudflare Pages / Vercel Enterprise"
+        },
+        "apiServer": {
+          "platform": "AWS EKS (Kubernetes) 멀티 리전",
+          "cost": "$2,000-10,000/mo",
+          "how": "US/EU/Asia 3 리전, Blue-Green 배포, 99.99% SLA"
+        },
+        "gpu": {
+          "platform": "Lambda Labs Reserved + RunPod",
+          "cost": "$5,000-30,000/mo",
+          "models": "전 모델 셀프호스팅, LoRA 파인튜닝 서비스"
+        },
+        "db": "AWS Aurora + ElastiCache",
+        "auth": "자체 구현 또는 Auth0 Enterprise",
+        "monitoring": "Datadog Full Stack",
+        "compliance": "SOC 2, GDPR, 감사 로그",
+        "totalCost": "$15,000-60,000/mo",
+        "action": "프라이빗 배포 옵션, 전용 인스턴스, SLA 계약, 온프레미스 옵션"
+      }
+    ],
+    "quickStartGuide": {
+      "step1": "지금 바로: GitHub Pages 대시보드는 https://mqzkim.github.io/prototype/ 에서 운영 중",
+      "step2_render": {
+        "description": "5분 안에 API 서버 무료 배포 (Render.com)",
+        "steps": [
+          "1. https://render.com 가입 (GitHub 계정 연동)",
+          "2. Dashboard → New → Web Service",
+          "3. Repository: mqzkim/prototype 선택",
+          "4. Branch: main",
+          "5. Build Command: npm install",
+          "6. Start Command: npm start",
+          "7. Instance Type: Free",
+          "8. Create Web Service 클릭",
+          "9. 배포 완료 후 URL: https://prototype-xxxx.onrender.com",
+          "10. 테스트: curl https://prototype-xxxx.onrender.com/v1/health"
+        ]
+      },
+      "step2_railway": {
+        "description": "대안: Railway ($5/mo, 더 빠른 콜드스타트)",
+        "steps": [
+          "1. https://railway.app 가입",
+          "2. New Project → Deploy from GitHub repo",
+          "3. Repository: mqzkim/prototype",
+          "4. Settings → Start Command: npm start",
+          "5. Deploy 클릭 → URL 자동 생성"
+        ]
+      }
+    },
+    "costSummaryByPhase": {
+      "Phase 0 (1-10 users)": { "infra": "$0", "videoAPI": "$0", "total": "$0" },
+      "Phase 1 (10-100 users)": { "infra": "$0", "videoAPI": "$0-50", "total": "$0-50" },
+      "Phase 2 (100-1K users)": { "infra": "$32-45", "videoAPI": "$50-800", "total": "$80-850" },
+      "Phase 3 (1K-5K users)": { "infra": "$130-250", "videoAPI": "$800-4,500", "total": "$930-4,750" },
+      "Phase 4 (5K-50K users)": { "infra": "$1,500-5,000", "videoAPI": "$4,500-20,000", "total": "$6,000-25,000" },
+      "Phase 5 (50K+ users)": { "infra": "$15,000-60,000", "videoAPI": "$20,000+", "total": "$35,000+" }
+    }
+  }
+}
