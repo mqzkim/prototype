@@ -283,5 +283,187 @@
       "totalCost": "$20,000",
       "netMargin": "$62,000"
     }
+  },
+  "deploymentPlan": {
+    "description": "유저 수 기반 인프라 배포 단계별 플랜. GitHub Pages(대시보드) + API 서버(별도 호스팅) 2-tier 구조",
+    "phases": [
+      {
+        "phase": "Phase 0: 프로토타입",
+        "users": "1-10 (개발자/내부 테스트)",
+        "mrr": "$0",
+        "dashboard": {
+          "platform": "GitHub Pages",
+          "cost": "$0",
+          "note": "이미 deploy.yml로 자동 배포 중"
+        },
+        "apiServer": {
+          "platform": "로컬 / Claude Code 환경",
+          "cost": "$0",
+          "how": "npm start (port 3000)",
+          "limits": "세션 종료 시 서버도 종료"
+        },
+        "db": "data/*.json (git-tracked)",
+        "totalCost": "$0/mo",
+        "action": "기능 검증, API 테스트, 피드백 수집",
+        "transitionTrigger": "외부 사용자 접근 필요 시 Phase 1로"
+      },
+      {
+        "phase": "Phase 1: MVP 공개",
+        "users": "10-100",
+        "mrr": "$0-500",
+        "dashboard": {
+          "platform": "GitHub Pages",
+          "cost": "$0",
+          "url": "https://mqzkim.github.io/prototype/"
+        },
+        "apiServer": {
+          "platform": "Render.com (Free)",
+          "cost": "$0",
+          "how": "GitHub 연동 → Build: npm install, Start: npm start",
+          "url": "https://prototype-api.onrender.com",
+          "limits": "750시간/월, 비활성 15분 후 sleep, 콜드스타트 30-60초",
+          "specs": "512MB RAM, 0.1 CPU"
+        },
+        "db": "data/*.json + Render Disk (영속 스토리지)",
+        "auth": "Clerk Free (500 MAU)",
+        "monitoring": "Render 내장 로그",
+        "totalCost": "$0/mo",
+        "action": "초기 사용자 온보딩, PMF 검증, 무료 티어만 운영",
+        "transitionTrigger": "콜드스타트 불만 또는 유료 사용자 10명+ 시 Phase 2로"
+      },
+      {
+        "phase": "Phase 2: 유료 전환",
+        "users": "100-1,000",
+        "mrr": "$500-5K",
+        "dashboard": {
+          "platform": "GitHub Pages",
+          "cost": "$0"
+        },
+        "apiServer": {
+          "platform": "Render.com Starter ($7/mo) 또는 Railway Hobby ($5/mo + 사용량)",
+          "cost": "$7-15/mo",
+          "how": "항상 활성(no sleep), 자동 배포, 커스텀 도메인",
+          "specs": "512MB-1GB RAM, 0.5 CPU",
+          "expectedLoad": "~1,000 req/day"
+        },
+        "db": "Render PostgreSQL Free (256MB) 또는 Supabase Free",
+        "auth": "Clerk Pro ($25/mo, 10K MAU)",
+        "monitoring": "Sentry Free + Render 로그",
+        "totalCost": "$32-45/mo",
+        "action": "Starter/Pro 티어 활성화, Stripe 결제 연동, 온보딩 자동화",
+        "transitionTrigger": "응답 지연 증가 또는 MAU 1,000+ 시 Phase 3로"
+      },
+      {
+        "phase": "Phase 3: 성장",
+        "users": "1,000-5,000",
+        "mrr": "$5K-30K",
+        "dashboard": {
+          "platform": "GitHub Pages + Cloudflare CDN",
+          "cost": "$0"
+        },
+        "apiServer": {
+          "platform": "Fly.io (글로벌 엣지) 또는 Render Pro ($25/mo)",
+          "cost": "$25-85/mo",
+          "how": "멀티 리전 (US + EU + Asia), 오토스케일링",
+          "specs": "1-2GB RAM, 1-2 CPU, 2-3 인스턴스",
+          "expectedLoad": "~10,000 req/day"
+        },
+        "db": "PlanetScale ($39/mo) 또는 Supabase Pro ($25/mo)",
+        "queue": "Redis (Upstash Free → $10/mo)",
+        "auth": "Clerk Pro ($25/mo)",
+        "monitoring": "Grafana Cloud Free + Sentry ($26/mo)",
+        "cdn": "Cloudflare R2 (비디오 캐싱, $0.015/GB/mo)",
+        "totalCost": "$130-250/mo",
+        "action": "글로벌 확장, 레이트 리밋 Redis로 이전, 비디오 결과 캐싱",
+        "transitionTrigger": "단일 서버 한계 또는 MAU 5,000+ 시 Phase 4로"
+      },
+      {
+        "phase": "Phase 4: 스케일",
+        "users": "5,000-50,000",
+        "mrr": "$30K-300K",
+        "dashboard": {
+          "platform": "Cloudflare Pages (GitHub Pages 대체)",
+          "cost": "$0-20/mo"
+        },
+        "apiServer": {
+          "platform": "AWS ECS Fargate 또는 Fly.io Scale",
+          "cost": "$200-800/mo",
+          "how": "컨테이너 오케스트레이션, 로드밸런서, 오토스케일 3-10 인스턴스",
+          "specs": "2GB RAM, 2 CPU per instance"
+        },
+        "gpu": {
+          "platform": "RunPod Serverless (오픈소스 모델 셀프호스팅 시작)",
+          "cost": "$860-3,000/mo",
+          "models": "HunyuanVideo 1.5 (A100), Wan 2.2 (A10G)"
+        },
+        "db": "PlanetScale Pro ($99/mo) + Redis Cluster ($50/mo)",
+        "auth": "Clerk Business ($100/mo, 100K MAU)",
+        "monitoring": "Datadog ($23/host/mo) 또는 Grafana Pro ($49/mo)",
+        "cdn": "Cloudflare Pro ($20/mo) + R2",
+        "totalCost": "$1,500-5,000/mo",
+        "action": "하이브리드 모델 (오픈소스 셀프호스팅 + 상용 API), Enterprise 티어 런칭",
+        "transitionTrigger": "Enterprise 계약 3건+ 또는 MRR $100K+ 시 Phase 5로"
+      },
+      {
+        "phase": "Phase 5: 엔터프라이즈",
+        "users": "50,000+",
+        "mrr": "$300K+",
+        "dashboard": {
+          "platform": "Cloudflare Pages / Vercel Enterprise"
+        },
+        "apiServer": {
+          "platform": "AWS EKS (Kubernetes) 멀티 리전",
+          "cost": "$2,000-10,000/mo",
+          "how": "US/EU/Asia 3 리전, Blue-Green 배포, 99.99% SLA"
+        },
+        "gpu": {
+          "platform": "Lambda Labs Reserved + RunPod",
+          "cost": "$5,000-30,000/mo",
+          "models": "전 모델 셀프호스팅, LoRA 파인튜닝 서비스"
+        },
+        "db": "AWS Aurora + ElastiCache",
+        "auth": "자체 구현 또는 Auth0 Enterprise",
+        "monitoring": "Datadog Full Stack",
+        "compliance": "SOC 2, GDPR, 감사 로그",
+        "totalCost": "$15,000-60,000/mo",
+        "action": "프라이빗 배포 옵션, 전용 인스턴스, SLA 계약, 온프레미스 옵션"
+      }
+    ],
+    "quickStartGuide": {
+      "step1": "지금 바로: GitHub Pages 대시보드는 https://mqzkim.github.io/prototype/ 에서 운영 중",
+      "step2_render": {
+        "description": "5분 안에 API 서버 무료 배포 (Render.com)",
+        "steps": [
+          "1. https://render.com 가입 (GitHub 계정 연동)",
+          "2. Dashboard → New → Web Service",
+          "3. Repository: mqzkim/prototype 선택",
+          "4. Branch: main",
+          "5. Build Command: npm install",
+          "6. Start Command: npm start",
+          "7. Instance Type: Free",
+          "8. Create Web Service 클릭",
+          "9. 배포 완료 후 URL: https://prototype-xxxx.onrender.com",
+          "10. 테스트: curl https://prototype-xxxx.onrender.com/v1/health"
+        ]
+      },
+      "step2_railway": {
+        "description": "대안: Railway ($5/mo, 더 빠른 콜드스타트)",
+        "steps": [
+          "1. https://railway.app 가입",
+          "2. New Project → Deploy from GitHub repo",
+          "3. Repository: mqzkim/prototype",
+          "4. Settings → Start Command: npm start",
+          "5. Deploy 클릭 → URL 자동 생성"
+        ]
+      }
+    },
+    "costSummaryByPhase": {
+      "Phase 0 (1-10 users)": { "infra": "$0", "videoAPI": "$0", "total": "$0" },
+      "Phase 1 (10-100 users)": { "infra": "$0", "videoAPI": "$0-50", "total": "$0-50" },
+      "Phase 2 (100-1K users)": { "infra": "$32-45", "videoAPI": "$50-800", "total": "$80-850" },
+      "Phase 3 (1K-5K users)": { "infra": "$130-250", "videoAPI": "$800-4,500", "total": "$930-4,750" },
+      "Phase 4 (5K-50K users)": { "infra": "$1,500-5,000", "videoAPI": "$4,500-20,000", "total": "$6,000-25,000" },
+      "Phase 5 (50K+ users)": { "infra": "$15,000-60,000", "videoAPI": "$20,000+", "total": "$35,000+" }
+    }
   }
 }
