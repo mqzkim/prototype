@@ -6,8 +6,7 @@
   "scripts": {
     "build": "node src/generators/build.js",
     "daily": "node scripts/daily-update.js",
-    "test": "node --test tests/build.test.js",
-    "lint": "echo 'lint passed'"
+    "test": "node --test tests/build.test.js"
   },
   "keywords": ["claude-code", "cloud-native", "daily-service"],
   "license": "MIT"

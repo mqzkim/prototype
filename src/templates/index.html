@@ -427,6 +427,47 @@
       color: var(--muted);
       margin-top: 0.15rem;
     }
+    /* SaaS Products */
+    .saas-product {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .saas-product:last-child { border-bottom: none; }
+    .saas-rank {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--rose);
+      font-weight: 700;
+      min-width: 24px;
+      text-shadow: 0 0 8px rgba(244, 63, 94, 0.4);
+    }
+    .saas-info { flex: 1; min-width: 0; }
+    .saas-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .saas-tagline {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .saas-votes {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--rose);
+    }
+
     .muted-text {
       font-size: 0.8rem;
       color: var(--muted);
@@ -658,6 +699,12 @@
         </div>
       </div>
     </div>
+
+    <!-- Indie SaaS -->
+    <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
+      <div class="feature-card-title">{{t.indieSaaS}}</div>
+      {{SAAS_SECTION}}
+    </section>
 
     <section class="timeline-section">
       <h2 class="section-header">{{t.changelog}}</h2>

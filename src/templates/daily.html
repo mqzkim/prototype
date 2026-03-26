@@ -127,6 +127,22 @@
       text-shadow:0 0 6px var(--glow-cyan);
     }
 
+    /* SaaS */
+    .saas-item {
+      display:flex; align-items:center; gap:0.6rem;
+      padding:0.5rem 0; border-bottom:1px solid var(--border);
+    }
+    .saas-item:last-child { border-bottom:none; }
+    .saas-rank {
+      font-family:'JetBrains Mono',monospace; font-size:0.7rem;
+      color:var(--rose); font-weight:700; min-width:24px;
+      text-shadow:0 0 8px rgba(244,63,94,0.4);
+    }
+    .saas-info { flex:1; min-width:0; }
+    .saas-name { font-size:0.85rem; font-weight:600; color:var(--text); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .saas-tagline { font-size:0.72rem; color:var(--muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .saas-votes { font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--rose); }
+
     .muted-text { font-size:0.82rem; color:var(--muted); font-style:italic; }
 
     /* Shimmer */
@@ -196,6 +212,14 @@
       <div class="section-card glow-card">
         <div class="section-title">{{t.githubTrending}}</div>
         {{TRENDING_HTML}}
+      </div>
+    </div>
+
+    <!-- Indie SaaS -->
+    <div class="section">
+      <div class="section-card glow-card">
+        <div class="section-title">{{t.indieSaaS}}</div>
+        {{SAAS_HTML}}
       </div>
     </div>
 
