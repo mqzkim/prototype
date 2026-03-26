@@ -101,6 +101,13 @@ async function dailyUpdate() {
   try { await fetchAPIs(); console.log('[api-data] Fetched'); }
   catch (e) { console.warn('[api-data] Failed:', e.message); }
 
+  // 7. Evaluate codebase against RULES.md
+  try {
+    const { evaluateRules } = await import('./evaluate-rules.js');
+    const result = await evaluateRules();
+    console.log(`[evaluation] Score: ${result.totalScore}/${result.maxScore} (${result.percentage}%) ${result.passing ? 'PASS' : 'FAIL'}`);
+  } catch (e) { console.warn('[evaluation] Failed:', e.message); }
+
   console.log('\n=== Daily Update Complete ===');
 }
 
