@@ -29,7 +29,7 @@
             "CQ-04": {
               "score": 4,
               "max": 4,
-              "measurement": 0.91
+              "measurement": 0.92
             },
             "CQ-05": {
               "score": 4,
@@ -102,12 +102,12 @@
             "PERF-01": {
               "score": 5,
               "max": 5,
-              "measurement": 48
+              "measurement": 12
             },
             "PERF-02": {
               "score": 5,
               "max": 5,
-              "measurement": 8
+              "measurement": 5
             },
             "PERF-03": {
               "score": 5,
@@ -178,7 +178,7 @@
           "name": "All functions are 40 lines or fewer",
           "score": 4,
           "max": 4,
-          "measurement": 0.91,
+          "measurement": 0.92,
           "pass": true
         },
         {
@@ -266,7 +266,7 @@
           "name": "Server starts and responds to /health in < 500ms",
           "score": 5,
           "max": 5,
-          "measurement": 48,
+          "measurement": 12,
           "pass": true
         },
         {
@@ -274,7 +274,7 @@
           "name": "Health endpoint responds in < 50ms",
           "score": 5,
           "max": 5,
-          "measurement": 8,
+          "measurement": 5,
           "pass": true
         },
         {
