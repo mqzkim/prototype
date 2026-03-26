@@ -44,7 +44,8 @@
 │   ├── generators/
 │   │   └── build.js         # data/ → dist/index.html 빌드
 │   └── templates/
-│       └── index.html       # AI-Native UI 대시보드 템플릿
+│       ├── index.html       # AI-Native UI 대시보드 템플릿
+│       └── daily.html       # 일별 상세 페이지 템플릿
 ├── scripts/
 │   ├── daily-update.js      # 메인 크론 엔트리포인트 (6개 모듈 호출)
 │   ├── collect-stats.js     # 레포 통계 수집 (commits, LOC, files)
@@ -62,7 +63,8 @@
 │   ├── til.json             # TIL 아카이브
 │   ├── trending.json        # GitHub trending 히스토리
 │   ├── improvements.json    # 자동 개선 로그
-│   └── api-data.json        # 환율/날씨 히스토리
+│   ├── api-data.json        # 환율/날씨 히스토리
+│   └── i18n.json            # 다국어(en/ko) 번역 데이터
 ├── dist/                    # 빌드 결과 (gitignore)
 ├── tests/
 │   └── build.test.js        # 데이터 검증 + 빌드 테스트
@@ -77,7 +79,6 @@
 - `npm run build` - 사이트 빌드 (dist/ 생성)
 - `npm run daily` - 데일리 업데이트 실행 (6개 모듈)
 - `npm test` - 테스트 실행
-- `npm run lint` - 린트 실행
 
 ## Development Rules
 1. 모든 데이터는 `data/` 디렉토리에 JSON으로 저장, **반드시 git-tracked**
