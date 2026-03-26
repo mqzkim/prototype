@@ -11,6 +11,8 @@ function loadJSON(relativePath) {
   return JSON.parse(readFileSync(p, 'utf-8'));
 }
 
+// ---- Shared helpers for main page ----
+
 function buildTimeline(entries) {
   return entries
     .slice()
@@ -24,6 +26,7 @@ function buildTimeline(entries) {
           <span class="entry-stat"><span class="num">${entry.stats.total_files}</span> files</span>
         </div>` : '';
       return `
+      <a href="daily/${entry.date}.html" style="text-decoration:none;color:inherit;display:block;">
       <div class="timeline-entry glow-card">
         <div class="entry-header">
           <span class="entry-date">${entry.date}</span>
@@ -33,7 +36,8 @@ function buildTimeline(entries) {
         <ul class="entry-changes">
           ${entry.changes.map(c => `<li>${c}</li>`).join('\n          ')}
         </ul>
-      </div>`;
+      </div>
+      </a>`;
     })
     .join('\n');
 }
@@ -48,8 +52,10 @@ function buildLocBars(snapshots) {
       const label = s.date.slice(5);
       return `
         <div class="bar-group">
+          <a href="daily/${s.date}.html" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:4px;">
           <div class="bar" style="height: ${height}px" title="${s.lines_of_code} LOC on ${s.date}"></div>
           <span class="bar-label">${label}</span>
+          </a>
         </div>`;
     })
     .join('\n');
@@ -58,8 +64,8 @@ function buildLocBars(snapshots) {
 function buildQuoteSection(dailyQuote) {
   if (!dailyQuote || !dailyQuote.quote) return '<p class="muted-text">No quote yet</p>';
   return `
-    <blockquote class="quote-text">"${dailyQuote.quote.text}"</blockquote>
-    <cite class="quote-author">— ${dailyQuote.quote.author}</cite>`;
+    <blockquote class="quote-text">&ldquo;${dailyQuote.quote.text}&rdquo;</blockquote>
+    <cite class="quote-author">&mdash; ${dailyQuote.quote.author}</cite>`;
 }
 
 function buildTILSection(til) {
@@ -135,6 +141,127 @@ function buildAPISection(apiData) {
   return html;
 }
 
+function buildArchiveList(entries) {
+  return entries
+    .slice()
+    .reverse()
+    .map(entry => `
+      <a href="daily/${entry.date}.html" class="archive-link">
+        <span class="archive-date">${entry.date}</span>
+        <span class="archive-version">v${entry.version}</span>
+        <span class="archive-summary">${entry.changes[0] || ''}</span>
+      </a>`)
+    .join('\n');
+}
+
+// ---- Daily page builder ----
+
+function buildDailyPages(dailyLog, snapshots, til, trending, apiData, quotes) {
+  const dailyTemplate = readFileSync(join(ROOT, 'src/templates/daily.html'), 'utf-8');
+  const dailyDir = join(ROOT, 'dist', 'daily');
+  mkdirSync(dailyDir, { recursive: true });
+
+  const dates = dailyLog.entries.map(e => e.date);
+
+  for (let i = 0; i < dailyLog.entries.length; i++) {
+    const entry = dailyLog.entries[i];
+    const date = entry.date;
+
+    // Nav links
+    const prevDate = i > 0 ? dates[i - 1] : null;
+    const nextDate = i < dates.length - 1 ? dates[i + 1] : null;
+    const navPrev = prevDate ? `<a href="${prevDate}.html">&larr; ${prevDate}</a>` : '<span></span>';
+    const navNext = nextDate ? `<a href="${nextDate}.html">${nextDate} &rarr;</a>` : '<span></span>';
+
+    // Quote for this date (deterministic from quotes.json)
+    let quoteHtml = '<p class="muted-text">No quote</p>';
+    if (quotes && quotes.quotes.length > 0) {
+      const hash = date.split('').reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0);
+      const idx = Math.abs(hash) % quotes.quotes.length;
+      const q = quotes.quotes[idx];
+      quoteHtml = `<blockquote class="quote-text">&ldquo;${q.text}&rdquo;</blockquote><cite class="quote-author">&mdash; ${q.author}</cite>`;
+    }
+
+    // TIL for this date
+    let tilHtml = '<p class="muted-text">No TIL for this day</p>';
+    const tilEntry = til?.entries?.find(e => e.date === date);
+    if (tilEntry) {
+      tilHtml = `<div class="til-badge">${tilEntry.category}</div><h3 class="til-title">${tilEntry.title}</h3><p class="til-content">${tilEntry.content}</p>`;
+    }
+
+    // Snapshot stats
+    let statsHtml = '<p class="muted-text">No snapshot</p>';
+    const snap = snapshots?.snapshots?.find(s => s.date === date);
+    if (snap) {
+      statsHtml = `<div class="stats-grid">
+        <div class="stat-item"><div class="stat-num">${snap.commits}</div><div class="stat-label">Commits</div></div>
+        <div class="stat-item"><div class="stat-num">${snap.lines_of_code}</div><div class="stat-label">LOC</div></div>
+        <div class="stat-item"><div class="stat-num">${snap.total_files}</div><div class="stat-label">Files</div></div>
+        <div class="stat-item"><div class="stat-num">${snap.repo_size_kb || '—'}KB</div><div class="stat-label">Size</div></div>
+      </div>`;
+    }
+
+    // API data for this date
+    let apiHtml = '<p class="muted-text">No API data</p>';
+    const exEntry = apiData?.exchange?.history?.find(e => e.date === date);
+    const wxEntry = apiData?.weather?.history?.find(e => e.date === date);
+    if (exEntry || wxEntry) {
+      apiHtml = '<div class="api-row">';
+      if (exEntry) {
+        apiHtml += `
+          <div class="api-item"><div class="api-label">USD/KRW</div><div class="api-value">${exEntry.usd_krw != null ? exEntry.usd_krw.toLocaleString() : '—'}</div></div>
+          <div class="api-item"><div class="api-label">USD/JPY</div><div class="api-value">${exEntry.usd_jpy ?? '—'}</div></div>
+          <div class="api-item"><div class="api-label">USD/EUR</div><div class="api-value">${exEntry.usd_eur ?? '—'}</div></div>`;
+      }
+      if (wxEntry) {
+        apiHtml += `<div class="api-item"><div class="api-label">Seoul</div><div class="api-value">${wxEntry.temp_c != null ? wxEntry.temp_c + '°C' : '—'}</div><div class="api-sub">${wxEntry.condition || ''}</div></div>`;
+      }
+      apiHtml += '</div>';
+    }
+
+    // Trending for this date
+    let trendingHtml = '<p class="muted-text">No trending data</p>';
+    const trendEntry = trending?.daily?.find(d => d.date === date);
+    if (trendEntry?.repos?.length > 0) {
+      trendingHtml = trendEntry.repos.slice(0, 10).map((r, idx) => `
+        <div class="trending-item">
+          <span class="trending-rank">#${idx + 1}</span>
+          <div class="trending-info">
+            <span class="trending-name">${r.name}</span>
+            <span class="trending-desc">${r.description || ''}</span>
+          </div>
+          <div class="trending-meta">
+            ${r.language ? `<span class="trending-lang">${r.language}</span>` : ''}
+            <span class="trending-stars">${r.stars ? r.stars.toLocaleString() : '?'}</span>
+          </div>
+        </div>`).join('\n');
+    }
+
+    // Changes
+    const changesHtml = entry.changes.length > 0
+      ? `<ul class="changes-list">${entry.changes.map(c => `<li>${c}</li>`).join('\n')}</ul>`
+      : '<p class="muted-text">No changes recorded</p>';
+
+    const html = dailyTemplate
+      .replace(/\{\{DATE\}\}/g, date)
+      .replace('{{VERSION}}', `v${entry.version}`)
+      .replace('{{NAV_PREV}}', navPrev)
+      .replace('{{NAV_NEXT}}', navNext)
+      .replace('{{QUOTE_HTML}}', quoteHtml)
+      .replace('{{TIL_HTML}}', tilHtml)
+      .replace('{{STATS_HTML}}', statsHtml)
+      .replace('{{API_HTML}}', apiHtml)
+      .replace('{{TRENDING_HTML}}', trendingHtml)
+      .replace('{{CHANGES_HTML}}', changesHtml);
+
+    writeFileSync(join(dailyDir, `${date}.html`), html);
+  }
+
+  console.log(`  ${dailyLog.entries.length} daily pages generated in dist/daily/`);
+}
+
+// ---- Main build ----
+
 function build() {
   const dailyLog = loadJSON('data/daily-log.json');
   const metrics = loadJSON('data/metrics.json');
@@ -144,6 +271,7 @@ function build() {
   const trending = loadJSON('data/trending.json');
   const improvements = loadJSON('data/improvements.json');
   const apiData = loadJSON('data/api-data.json');
+  const quotes = loadJSON('data/quotes.json');
 
   const template = readFileSync(join(ROOT, 'src/templates/index.html'), 'utf-8');
 
@@ -160,14 +288,17 @@ function build() {
     .replace('{{TRENDING_SECTION}}', buildTrendingSection(trending))
     .replace('{{IMPROVEMENTS_SECTION}}', buildImprovementsSection(improvements))
     .replace('{{API_SECTION}}', buildAPISection(apiData))
+    .replace('{{ARCHIVE_LIST}}', buildArchiveList(dailyLog.entries))
     .replace('{{TIMELINE_ENTRIES}}', buildTimeline(dailyLog.entries))
     .replace('{{LAST_UPDATED}}', metrics.last_updated);
 
   const distDir = join(ROOT, 'dist');
   mkdirSync(distDir, { recursive: true });
   writeFileSync(join(distDir, 'index.html'), html);
-
   console.log(`Build complete: dist/index.html`);
+
+  // Generate daily detail pages
+  buildDailyPages(dailyLog, snapshots, til, trending, apiData, quotes);
 }
 
 build();
