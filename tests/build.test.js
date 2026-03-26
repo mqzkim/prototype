@@ -68,13 +68,21 @@ describe('data files', () => {
 });
 
 describe('build', () => {
-  it('generates dist/index.html', () => {
+  it('generates locale pages', () => {
     execSync('node src/generators/build.js', { cwd: ROOT });
     assert.ok(existsSync(join(ROOT, 'dist/index.html')));
+    assert.ok(existsSync(join(ROOT, 'dist/en/index.html')));
+    assert.ok(existsSync(join(ROOT, 'dist/ko/index.html')));
   });
 
-  it('dist/index.html contains all sections', () => {
+  it('root index.html redirects by language', () => {
     const html = readFileSync(join(ROOT, 'dist/index.html'), 'utf-8');
+    assert.ok(html.includes('navigator.language'));
+    assert.ok(html.includes('en/index.html'));
+  });
+
+  it('English page contains all sections', () => {
+    const html = readFileSync(join(ROOT, 'dist/en/index.html'), 'utf-8');
     assert.ok(html.includes('Build in Public'));
     assert.ok(html.includes('Days Active'));
     assert.ok(html.includes('Quote of the Day'));
@@ -83,5 +91,20 @@ describe('build', () => {
     assert.ok(html.includes('Auto Improvements'));
     assert.ok(html.includes('Live Data'));
     assert.ok(html.includes('Changelog'));
+    assert.ok(html.includes('lang="en"'));
+  });
+
+  it('Korean page contains translated labels', () => {
+    const html = readFileSync(join(ROOT, 'dist/ko/index.html'), 'utf-8');
+    assert.ok(html.includes('lang="ko"'));
+    assert.ok(html.includes('활동일 수'));
+    assert.ok(html.includes('오늘의 명언'));
+    assert.ok(html.includes('오늘 배운 것'));
+    assert.ok(html.includes('일별 아카이브'));
+  });
+
+  it('generates daily pages per locale', () => {
+    assert.ok(existsSync(join(ROOT, 'dist/en/daily/2026-03-26.html')));
+    assert.ok(existsSync(join(ROOT, 'dist/ko/daily/2026-03-26.html')));
   });
 });

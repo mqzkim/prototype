@@ -154,110 +154,17 @@ function buildArchiveList(entries) {
     .join('\n');
 }
 
-// ---- Daily page builder ----
+// ---- i18n helpers ----
 
-function buildDailyPages(dailyLog, snapshots, til, trending, apiData, quotes) {
-  const dailyTemplate = readFileSync(join(ROOT, 'src/templates/daily.html'), 'utf-8');
-  const dailyDir = join(ROOT, 'dist', 'daily');
-  mkdirSync(dailyDir, { recursive: true });
+function applyTranslations(html, t) {
+  return html.replace(/\{\{t\.(\w+)\}\}/g, (_, key) => t[key] || key);
+}
 
-  const dates = dailyLog.entries.map(e => e.date);
-
-  for (let i = 0; i < dailyLog.entries.length; i++) {
-    const entry = dailyLog.entries[i];
-    const date = entry.date;
-
-    // Nav links
-    const prevDate = i > 0 ? dates[i - 1] : null;
-    const nextDate = i < dates.length - 1 ? dates[i + 1] : null;
-    const navPrev = prevDate ? `<a href="${prevDate}.html">&larr; ${prevDate}</a>` : '<span></span>';
-    const navNext = nextDate ? `<a href="${nextDate}.html">${nextDate} &rarr;</a>` : '<span></span>';
-
-    // Quote for this date (deterministic from quotes.json)
-    let quoteHtml = '<p class="muted-text">No quote</p>';
-    if (quotes && quotes.quotes.length > 0) {
-      const hash = date.split('').reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0);
-      const idx = Math.abs(hash) % quotes.quotes.length;
-      const q = quotes.quotes[idx];
-      quoteHtml = `<blockquote class="quote-text">&ldquo;${q.text}&rdquo;</blockquote><cite class="quote-author">&mdash; ${q.author}</cite>`;
-    }
-
-    // TIL for this date
-    let tilHtml = '<p class="muted-text">No TIL for this day</p>';
-    const tilEntry = til?.entries?.find(e => e.date === date);
-    if (tilEntry) {
-      tilHtml = `<div class="til-badge">${tilEntry.category}</div><h3 class="til-title">${tilEntry.title}</h3><p class="til-content">${tilEntry.content}</p>`;
-    }
-
-    // Snapshot stats
-    let statsHtml = '<p class="muted-text">No snapshot</p>';
-    const snap = snapshots?.snapshots?.find(s => s.date === date);
-    if (snap) {
-      statsHtml = `<div class="stats-grid">
-        <div class="stat-item"><div class="stat-num">${snap.commits}</div><div class="stat-label">Commits</div></div>
-        <div class="stat-item"><div class="stat-num">${snap.lines_of_code}</div><div class="stat-label">LOC</div></div>
-        <div class="stat-item"><div class="stat-num">${snap.total_files}</div><div class="stat-label">Files</div></div>
-        <div class="stat-item"><div class="stat-num">${snap.repo_size_kb || '—'}KB</div><div class="stat-label">Size</div></div>
-      </div>`;
-    }
-
-    // API data for this date
-    let apiHtml = '<p class="muted-text">No API data</p>';
-    const exEntry = apiData?.exchange?.history?.find(e => e.date === date);
-    const wxEntry = apiData?.weather?.history?.find(e => e.date === date);
-    if (exEntry || wxEntry) {
-      apiHtml = '<div class="api-row">';
-      if (exEntry) {
-        apiHtml += `
-          <div class="api-item"><div class="api-label">USD/KRW</div><div class="api-value">${exEntry.usd_krw != null ? exEntry.usd_krw.toLocaleString() : '—'}</div></div>
-          <div class="api-item"><div class="api-label">USD/JPY</div><div class="api-value">${exEntry.usd_jpy ?? '—'}</div></div>
-          <div class="api-item"><div class="api-label">USD/EUR</div><div class="api-value">${exEntry.usd_eur ?? '—'}</div></div>`;
-      }
-      if (wxEntry) {
-        apiHtml += `<div class="api-item"><div class="api-label">Seoul</div><div class="api-value">${wxEntry.temp_c != null ? wxEntry.temp_c + '°C' : '—'}</div><div class="api-sub">${wxEntry.condition || ''}</div></div>`;
-      }
-      apiHtml += '</div>';
-    }
-
-    // Trending for this date
-    let trendingHtml = '<p class="muted-text">No trending data</p>';
-    const trendEntry = trending?.daily?.find(d => d.date === date);
-    if (trendEntry?.repos?.length > 0) {
-      trendingHtml = trendEntry.repos.slice(0, 10).map((r, idx) => `
-        <div class="trending-item">
-          <span class="trending-rank">#${idx + 1}</span>
-          <div class="trending-info">
-            <span class="trending-name">${r.name}</span>
-            <span class="trending-desc">${r.description || ''}</span>
-          </div>
-          <div class="trending-meta">
-            ${r.language ? `<span class="trending-lang">${r.language}</span>` : ''}
-            <span class="trending-stars">${r.stars ? r.stars.toLocaleString() : '?'}</span>
-          </div>
-        </div>`).join('\n');
-    }
-
-    // Changes
-    const changesHtml = entry.changes.length > 0
-      ? `<ul class="changes-list">${entry.changes.map(c => `<li>${c}</li>`).join('\n')}</ul>`
-      : '<p class="muted-text">No changes recorded</p>';
-
-    const html = dailyTemplate
-      .replace(/\{\{DATE\}\}/g, date)
-      .replace('{{VERSION}}', `v${entry.version}`)
-      .replace('{{NAV_PREV}}', navPrev)
-      .replace('{{NAV_NEXT}}', navNext)
-      .replace('{{QUOTE_HTML}}', quoteHtml)
-      .replace('{{TIL_HTML}}', tilHtml)
-      .replace('{{STATS_HTML}}', statsHtml)
-      .replace('{{API_HTML}}', apiHtml)
-      .replace('{{TRENDING_HTML}}', trendingHtml)
-      .replace('{{CHANGES_HTML}}', changesHtml);
-
-    writeFileSync(join(dailyDir, `${date}.html`), html);
-  }
-
-  console.log(`  ${dailyLog.entries.length} daily pages generated in dist/daily/`);
+function buildLangSwitcher(locale, locales) {
+  return locales
+    .filter(l => l !== locale)
+    .map(l => `<a href="../${l}/index.html" style="color:var(--cyan);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:0.75rem;">${l === 'ko' ? '한국어' : 'English'}</a>`)
+    .join(' | ');
 }
 
 // ---- Main build ----
@@ -272,33 +179,154 @@ function build() {
   const improvements = loadJSON('data/improvements.json');
   const apiData = loadJSON('data/api-data.json');
   const quotes = loadJSON('data/quotes.json');
+  const i18n = loadJSON('data/i18n.json');
 
   const template = readFileSync(join(ROOT, 'src/templates/index.html'), 'utf-8');
-
-  const html = template
-    .replace('{{SERVICE_HEALTH}}', metrics.service_health)
-    .replace('{{DAYS_ACTIVE}}', String(metrics.total_days_active))
-    .replace('{{TOTAL_COMMITS}}', String(metrics.total_commits))
-    .replace('{{TOTAL_LINES}}', String(metrics.total_lines))
-    .replace('{{TOTAL_FILES}}', String(metrics.total_files))
-    .replace('{{STREAK}}', String(metrics.streak))
-    .replace('{{LOC_BARS}}', buildLocBars(snapshots?.snapshots))
-    .replace('{{QUOTE_SECTION}}', buildQuoteSection(dailyQuote))
-    .replace('{{TIL_SECTION}}', buildTILSection(til))
-    .replace('{{TRENDING_SECTION}}', buildTrendingSection(trending))
-    .replace('{{IMPROVEMENTS_SECTION}}', buildImprovementsSection(improvements))
-    .replace('{{API_SECTION}}', buildAPISection(apiData))
-    .replace('{{ARCHIVE_LIST}}', buildArchiveList(dailyLog.entries))
-    .replace('{{TIMELINE_ENTRIES}}', buildTimeline(dailyLog.entries))
-    .replace('{{LAST_UPDATED}}', metrics.last_updated);
-
+  const dailyTemplate = readFileSync(join(ROOT, 'src/templates/daily.html'), 'utf-8');
+  const locales = Object.keys(i18n);
   const distDir = join(ROOT, 'dist');
   mkdirSync(distDir, { recursive: true });
-  writeFileSync(join(distDir, 'index.html'), html);
-  console.log(`Build complete: dist/index.html`);
 
-  // Generate daily detail pages
-  buildDailyPages(dailyLog, snapshots, til, trending, apiData, quotes);
+  for (const locale of locales) {
+    const t = i18n[locale];
+    const localeDir = join(distDir, locale);
+    mkdirSync(localeDir, { recursive: true });
+
+    // Build main page for this locale
+    let html = template
+      .replace('{{SERVICE_HEALTH}}', metrics.service_health)
+      .replace('{{DAYS_ACTIVE}}', String(metrics.total_days_active))
+      .replace('{{TOTAL_COMMITS}}', String(metrics.total_commits))
+      .replace('{{TOTAL_LINES}}', String(metrics.total_lines))
+      .replace('{{TOTAL_FILES}}', String(metrics.total_files))
+      .replace('{{STREAK}}', String(metrics.streak))
+      .replace('{{LOC_BARS}}', buildLocBars(snapshots?.snapshots))
+      .replace('{{QUOTE_SECTION}}', buildQuoteSection(dailyQuote))
+      .replace('{{TIL_SECTION}}', buildTILSection(til))
+      .replace('{{TRENDING_SECTION}}', buildTrendingSection(trending))
+      .replace('{{IMPROVEMENTS_SECTION}}', buildImprovementsSection(improvements))
+      .replace('{{API_SECTION}}', buildAPISection(apiData))
+      .replace('{{ARCHIVE_LIST}}', buildArchiveList(dailyLog.entries))
+      .replace('{{TIMELINE_ENTRIES}}', buildTimeline(dailyLog.entries))
+      .replace('{{LAST_UPDATED}}', metrics.last_updated)
+      .replace('{{LANG_SWITCHER}}', buildLangSwitcher(locale, locales));
+    html = applyTranslations(html, t);
+
+    writeFileSync(join(localeDir, 'index.html'), html);
+
+    // Build daily pages for this locale
+    const dailyDir = join(localeDir, 'daily');
+    mkdirSync(dailyDir, { recursive: true });
+    const dates = dailyLog.entries.map(e => e.date);
+
+    for (let i = 0; i < dailyLog.entries.length; i++) {
+      const entry = dailyLog.entries[i];
+      const date = entry.date;
+      const prevDate = i > 0 ? dates[i - 1] : null;
+      const nextDate = i < dates.length - 1 ? dates[i + 1] : null;
+      const navPrev = prevDate ? `<a href="${prevDate}.html">&larr; ${prevDate}</a>` : '<span></span>';
+      const navNext = nextDate ? `<a href="${nextDate}.html">${nextDate} &rarr;</a>` : '<span></span>';
+
+      let quoteHtml = `<p class="muted-text">${t.noQuote}</p>`;
+      if (quotes && quotes.quotes.length > 0) {
+        const hash = date.split('').reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0);
+        const idx = Math.abs(hash) % quotes.quotes.length;
+        const q = quotes.quotes[idx];
+        quoteHtml = `<blockquote class="quote-text">&ldquo;${q.text}&rdquo;</blockquote><cite class="quote-author">&mdash; ${q.author}</cite>`;
+      }
+
+      let tilHtml = `<p class="muted-text">${t.noTIL}</p>`;
+      const tilEntry = til?.entries?.find(e => e.date === date);
+      if (tilEntry) {
+        tilHtml = `<div class="til-badge">${tilEntry.category}</div><h3 class="til-title">${tilEntry.title}</h3><p class="til-content">${tilEntry.content}</p>`;
+      }
+
+      let statsHtml = `<p class="muted-text">${t.noSnapshot}</p>`;
+      const snap = snapshots?.snapshots?.find(s => s.date === date);
+      if (snap) {
+        statsHtml = `<div class="stats-grid">
+          <div class="stat-item"><div class="stat-num">${snap.commits}</div><div class="stat-label">${t.commits}</div></div>
+          <div class="stat-item"><div class="stat-num">${snap.lines_of_code}</div><div class="stat-label">LOC</div></div>
+          <div class="stat-item"><div class="stat-num">${snap.total_files}</div><div class="stat-label">${t.files}</div></div>
+          <div class="stat-item"><div class="stat-num">${snap.repo_size_kb || '—'}KB</div><div class="stat-label">${t.size}</div></div>
+        </div>`;
+      }
+
+      let apiHtml = `<p class="muted-text">${t.noApiData}</p>`;
+      const exEntry = apiData?.exchange?.history?.find(e => e.date === date);
+      const wxEntry = apiData?.weather?.history?.find(e => e.date === date);
+      if (exEntry || wxEntry) {
+        apiHtml = '<div class="api-row">';
+        if (exEntry) {
+          apiHtml += `
+            <div class="api-item"><div class="api-label">USD/KRW</div><div class="api-value">${exEntry.usd_krw != null ? exEntry.usd_krw.toLocaleString() : '—'}</div></div>
+            <div class="api-item"><div class="api-label">USD/JPY</div><div class="api-value">${exEntry.usd_jpy ?? '—'}</div></div>
+            <div class="api-item"><div class="api-label">USD/EUR</div><div class="api-value">${exEntry.usd_eur ?? '—'}</div></div>`;
+        }
+        if (wxEntry) {
+          apiHtml += `<div class="api-item"><div class="api-label">Seoul</div><div class="api-value">${wxEntry.temp_c != null ? wxEntry.temp_c + '°C' : '—'}</div><div class="api-sub">${wxEntry.condition || ''}</div></div>`;
+        }
+        apiHtml += '</div>';
+      }
+
+      let trendingHtml = `<p class="muted-text">${t.noTrending}</p>`;
+      const trendEntry = trending?.daily?.find(d => d.date === date);
+      if (trendEntry?.repos?.length > 0) {
+        trendingHtml = trendEntry.repos.slice(0, 10).map((r, idx) => `
+          <div class="trending-item">
+            <span class="trending-rank">#${idx + 1}</span>
+            <div class="trending-info">
+              <span class="trending-name">${r.name}</span>
+              <span class="trending-desc">${r.description || ''}</span>
+            </div>
+            <div class="trending-meta">
+              ${r.language ? `<span class="trending-lang">${r.language}</span>` : ''}
+              <span class="trending-stars">${r.stars ? r.stars.toLocaleString() : '?'}</span>
+            </div>
+          </div>`).join('\n');
+      }
+
+      const changesHtml = entry.changes.length > 0
+        ? `<ul class="changes-list">${entry.changes.map(c => `<li>${c}</li>`).join('\n')}</ul>`
+        : `<p class="muted-text">${t.noChanges}</p>`;
+
+      let dayHtml = dailyTemplate
+        .replace(/\{\{DATE\}\}/g, date)
+        .replace('{{VERSION}}', `v${entry.version}`)
+        .replace('{{NAV_PREV}}', navPrev)
+        .replace('{{NAV_NEXT}}', navNext)
+        .replace('{{QUOTE_HTML}}', quoteHtml)
+        .replace('{{TIL_HTML}}', tilHtml)
+        .replace('{{STATS_HTML}}', statsHtml)
+        .replace('{{API_HTML}}', apiHtml)
+        .replace('{{TRENDING_HTML}}', trendingHtml)
+        .replace('{{CHANGES_HTML}}', changesHtml);
+      dayHtml = applyTranslations(dayHtml, t);
+
+      writeFileSync(join(dailyDir, `${date}.html`), dayHtml);
+    }
+
+    console.log(`[${locale}] index.html + ${dailyLog.entries.length} daily pages`);
+  }
+
+  // Root redirect page
+  const redirectHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script>
+    const lang = (navigator.language || 'en').slice(0, 2);
+    const supported = ${JSON.stringify(locales)};
+    const target = supported.includes(lang) ? lang : 'en';
+    window.location.replace(target + '/index.html');
+  </script>
+  <meta http-equiv="refresh" content="0;url=en/index.html">
+</head>
+<body></body>
+</html>`;
+  writeFileSync(join(distDir, 'index.html'), redirectHtml);
+
+  console.log(`Build complete: ${locales.length} locales + redirect`);
 }
 
 build();

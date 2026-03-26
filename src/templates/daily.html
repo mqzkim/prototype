@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{t.lang}}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -145,7 +145,7 @@
 <body>
   <div class="page">
     <nav class="nav">
-      <a href="../index.html">Home</a>
+      <a href="../index.html">{{t.home}}</a>
       <div class="nav-arrows">
         {{NAV_PREV}}
         {{NAV_NEXT}}
@@ -162,7 +162,7 @@
     <!-- Quote -->
     <div class="section">
       <div class="section-card glow-card">
-        <div class="section-title">Quote of the Day</div>
+        <div class="section-title">{{t.quoteOfTheDay}}</div>
         {{QUOTE_HTML}}
       </div>
     </div>
@@ -170,7 +170,7 @@
     <!-- TIL -->
     <div class="section">
       <div class="section-card glow-card">
-        <div class="section-title">Today I Learned</div>
+        <div class="section-title">{{t.todayILearned}}</div>
         {{TIL_HTML}}
       </div>
     </div>
@@ -178,7 +178,7 @@
     <!-- Repo Stats -->
     <div class="section">
       <div class="section-card glow-card">
-        <div class="section-title">Repo Snapshot</div>
+        <div class="section-title">{{t.repoSnapshot}}</div>
         {{STATS_HTML}}
       </div>
     </div>
@@ -186,7 +186,7 @@
     <!-- API Data -->
     <div class="section">
       <div class="section-card glow-card">
-        <div class="section-title">Live Data</div>
+        <div class="section-title">{{t.liveData}}</div>
         {{API_HTML}}
       </div>
     </div>
@@ -194,7 +194,7 @@
     <!-- Trending -->
     <div class="section">
       <div class="section-card glow-card">
-        <div class="section-title">GitHub Trending</div>
+        <div class="section-title">{{t.githubTrending}}</div>
         {{TRENDING_HTML}}
       </div>
     </div>
@@ -202,13 +202,13 @@
     <!-- Changes -->
     <div class="section">
       <div class="section-card glow-card">
-        <div class="section-title">Changes</div>
+        <div class="section-title">{{t.changes}}</div>
         {{CHANGES_HTML}}
       </div>
     </div>
 
     <footer>
-      <p class="footer-text">Part of <a href="../index.html" style="color:var(--cyan);text-decoration:none;">Build in Public</a></p>
+      <p class="footer-text">{{t.partOf}} <a href="../index.html" style="color:var(--cyan);text-decoration:none;">{{t.title}}</a></p>
     </footer>
   </div>
 </body>

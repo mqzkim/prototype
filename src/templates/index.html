@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{t.lang}}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -591,37 +591,37 @@
   <div class="page">
     <header class="header">
       <div class="header-badge"><span class="pulse"></span> {{SERVICE_HEALTH}}</div>
-      <h1>Build in Public</h1>
-      <p class="subtitle">This project evolves daily — powered by AI cron jobs, zero local dev<span class="cursor"></span></p>
+      <h1>{{t.title}}</h1>
+      <p class="subtitle">{{t.subtitle}}<span class="cursor"></span></p>
     </header>
 
     <div class="shimmer-line"></div>
 
     <div class="streak-section">
-      <div class="streak-badge">{{STREAK}} day streak</div>
+      <div class="streak-badge">{{STREAK}} {{t.dayStreak}}</div>
     </div>
 
     <section class="stats">
       <div class="stat-card glow-card">
         <div class="stat-value">{{DAYS_ACTIVE}}</div>
-        <div class="stat-label">Days Active</div>
+        <div class="stat-label">{{t.daysActive}}</div>
       </div>
       <div class="stat-card glow-card">
         <div class="stat-value">{{TOTAL_COMMITS}}</div>
-        <div class="stat-label">Commits</div>
+        <div class="stat-label">{{t.commits}}</div>
       </div>
       <div class="stat-card glow-card">
         <div class="stat-value">{{TOTAL_LINES}}</div>
-        <div class="stat-label">Lines of Code</div>
+        <div class="stat-label">{{t.linesOfCode}}</div>
       </div>
       <div class="stat-card glow-card">
         <div class="stat-value">{{TOTAL_FILES}}</div>
-        <div class="stat-label">Files</div>
+        <div class="stat-label">{{t.files}}</div>
       </div>
     </section>
 
     <section class="chart-section glow-card">
-      <div class="chart-title">Lines of Code Over Time</div>
+      <div class="chart-title">{{t.locOverTime}}</div>
       <div class="bar-chart">
         {{LOC_BARS}}
       </div>
@@ -630,29 +630,29 @@
     <!-- Quote + TIL -->
     <div class="feature-grid">
       <div class="feature-card glow-card">
-        <div class="feature-card-title">Quote of the Day</div>
+        <div class="feature-card-title">{{t.quoteOfTheDay}}</div>
         {{QUOTE_SECTION}}
       </div>
       <div class="feature-card glow-card">
-        <div class="feature-card-title">Today I Learned</div>
+        <div class="feature-card-title">{{t.todayILearned}}</div>
         {{TIL_SECTION}}
       </div>
     </div>
 
     <!-- API Dashboard -->
     <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
-      <div class="feature-card-title">Live Data</div>
+      <div class="feature-card-title">{{t.liveData}}</div>
       {{API_SECTION}}
     </section>
 
     <!-- Trending + Improvements -->
     <div class="feature-grid">
       <div class="feature-card glow-card">
-        <div class="feature-card-title">GitHub Trending</div>
+        <div class="feature-card-title">{{t.githubTrending}}</div>
         {{TRENDING_SECTION}}
       </div>
       <div class="feature-card glow-card">
-        <div class="feature-card-title">Auto Improvements</div>
+        <div class="feature-card-title">{{t.autoImprovements}}</div>
         <div class="imp-stats">
           {{IMPROVEMENTS_SECTION}}
         </div>
@@ -660,19 +660,20 @@
     </div>
 
     <section class="timeline-section">
-      <h2 class="section-header">Changelog</h2>
+      <h2 class="section-header">{{t.changelog}}</h2>
       {{TIMELINE_ENTRIES}}
     </section>
 
     <section class="archive-section">
-      <h2 class="section-header">Daily Archive</h2>
+      <h2 class="section-header">{{t.dailyArchive}}</h2>
       {{ARCHIVE_LIST}}
     </section>
 
     <footer>
       <div class="shimmer-line" style="margin-bottom:1.5rem;"></div>
-      <p class="footer-text">Last updated: <span class="footer-highlight">{{LAST_UPDATED}}</span></p>
-      <p class="footer-text" style="margin-top:0.3rem;">Built entirely in the cloud with <span class="footer-highlight">Claude Code</span></p>
+      <p class="footer-text">{{t.lastUpdated}}: <span class="footer-highlight">{{LAST_UPDATED}}</span></p>
+      <p class="footer-text" style="margin-top:0.3rem;">{{t.builtWith}} <span class="footer-highlight">Claude Code</span></p>
+      <p class="footer-text" style="margin-top:0.5rem;">{{LANG_SWITCHER}}</p>
     </footer>
   </div>
 </body>
