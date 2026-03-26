@@ -3,142 +3,301 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prototype Daily Service</title>
+  <title>Build in Public - Daily Dashboard</title>
   <style>
     :root {
-      --bg: #0d1117;
-      --card: #161b22;
-      --border: #30363d;
-      --text: #c9d1d9;
-      --accent: #58a6ff;
-      --green: #3fb950;
-      --orange: #d29922;
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --card: #1a1a26;
+      --border: #2a2a3a;
+      --text: #e0e0e8;
+      --muted: #6b6b80;
+      --accent: #7c5cff;
+      --accent-soft: rgba(124, 92, 255, 0.15);
+      --green: #22c55e;
+      --green-soft: rgba(34, 197, 94, 0.15);
+      --blue: #3b82f6;
+      --blue-soft: rgba(59, 130, 246, 0.15);
+      --orange: #f59e0b;
+      --orange-soft: rgba(245, 158, 11, 0.15);
+      --pink: #ec4899;
+      --pink-soft: rgba(236, 72, 153, 0.15);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 2rem;
+      line-height: 1.6;
     }
-    .container { max-width: 800px; margin: 0 auto; }
-    header {
+    .page { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    /* Header */
+    .header {
       text-align: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
+      padding: 3rem 0 2rem;
     }
-    h1 { color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem; }
-    .subtitle { color: #8b949e; font-size: 0.9rem; }
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .metric-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.2rem;
-      text-align: center;
-    }
-    .metric-value {
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--green);
-    }
-    .metric-label { font-size: 0.8rem; color: #8b949e; margin-top: 0.3rem; }
-    .health-badge {
-      display: inline-block;
-      padding: 0.2rem 0.8rem;
-      border-radius: 12px;
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 600;
-      background: rgba(63, 185, 80, 0.15);
-      color: var(--green);
-      border: 1px solid rgba(63, 185, 80, 0.3);
-    }
-    .timeline { margin-top: 2rem; }
-    .timeline h2 {
-      color: var(--accent);
-      font-size: 1.2rem;
       margin-bottom: 1rem;
+      background: var(--green-soft);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, 0.25);
     }
-    .day-entry {
+    .pulse {
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle { color: var(--muted); font-size: 1rem; }
+
+    /* Stats Grid */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    .stat-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.2rem;
-      margin-bottom: 0.8rem;
+      border-radius: 12px;
+      padding: 1.2rem;
+      position: relative;
+      overflow: hidden;
     }
-    .day-header {
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .stat-card:nth-child(1)::before { background: var(--accent); }
+    .stat-card:nth-child(2)::before { background: var(--green); }
+    .stat-card:nth-child(3)::before { background: var(--blue); }
+    .stat-card:nth-child(4)::before { background: var(--orange); }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-card:nth-child(1) .stat-value { color: var(--accent); }
+    .stat-card:nth-child(2) .stat-value { color: var(--green); }
+    .stat-card:nth-child(3) .stat-value { color: var(--blue); }
+    .stat-card:nth-child(4) .stat-value { color: var(--orange); }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* Chart Section */
+    .chart-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      color: var(--text);
+    }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 120px;
+      padding-top: 0.5rem;
+    }
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+    .bar {
+      width: 100%;
+      max-width: 40px;
+      border-radius: 4px 4px 0 0;
+      background: var(--accent);
+      transition: height 0.3s;
+      min-height: 2px;
+    }
+    .bar-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    /* Timeline */
+    .timeline-section { margin: 2rem 0; }
+    .section-header {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .timeline-entry {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 0.8rem;
+      position: relative;
+    }
+    .timeline-entry::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+      background: var(--accent);
+    }
+    .entry-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
     }
-    .day-date { font-weight: 600; color: var(--accent); }
-    .day-version { font-size: 0.75rem; color: #8b949e; }
-    .day-changes { list-style: none; }
-    .day-changes li {
-      padding: 0.2rem 0;
+    .entry-date { font-weight: 700; color: var(--accent); }
+    .entry-version {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface);
+      padding: 0.15rem 0.5rem;
+      border-radius: 8px;
+    }
+    .entry-stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .entry-stat {
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .entry-stat .num { color: var(--text); font-weight: 600; }
+    .entry-changes { list-style: none; }
+    .entry-changes li {
+      padding: 0.15rem 0;
       font-size: 0.9rem;
+      color: var(--text);
     }
-    .day-changes li::before {
-      content: ">";
+    .entry-changes li::before {
+      content: "~>";
       color: var(--green);
       margin-right: 0.5rem;
-      font-weight: bold;
+      font-weight: 700;
+      font-family: monospace;
     }
+
+    /* Footer */
     footer {
       text-align: center;
-      margin-top: 3rem;
-      padding-top: 1.5rem;
+      padding: 2rem 0;
       border-top: 1px solid var(--border);
-      color: #8b949e;
-      font-size: 0.8rem;
+      margin-top: 2rem;
+    }
+    .footer-text { font-size: 0.8rem; color: var(--muted); }
+    .footer-highlight { color: var(--accent); font-weight: 600; }
+
+    /* Streak badge */
+    .streak-section {
+      display: flex;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    .streak-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      background: var(--orange-soft);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Prototype Daily Service</h1>
-      <p class="subtitle">Cloud-native service that evolves daily via Claude Code</p>
-      <div style="margin-top: 0.8rem;">
-        <span class="health-badge">{{SERVICE_HEALTH}}</span>
-      </div>
+  <div class="page">
+    <header class="header">
+      <div class="header-badge"><span class="pulse"></span> {{SERVICE_HEALTH}}</div>
+      <h1>Build in Public</h1>
+      <p class="subtitle">This project evolves daily — powered by Claude Code cron jobs, zero local dev</p>
     </header>
 
-    <section class="metrics">
-      <div class="metric-card">
-        <div class="metric-value">{{DAYS_ACTIVE}}</div>
-        <div class="metric-label">Days Active</div>
+    <div class="streak-section">
+      <div class="streak-badge">{{STREAK}} day streak</div>
+    </div>
+
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-value">{{DAYS_ACTIVE}}</div>
+        <div class="stat-label">Days Active</div>
       </div>
-      <div class="metric-card">
-        <div class="metric-value">{{TOTAL_FEATURES}}</div>
-        <div class="metric-label">Features</div>
+      <div class="stat-card">
+        <div class="stat-value">{{TOTAL_COMMITS}}</div>
+        <div class="stat-label">Commits</div>
       </div>
-      <div class="metric-card">
-        <div class="metric-value">{{BUGS_FIXED}}</div>
-        <div class="metric-label">Bugs Fixed</div>
+      <div class="stat-card">
+        <div class="stat-value">{{TOTAL_LINES}}</div>
+        <div class="stat-label">Lines of Code</div>
       </div>
-      <div class="metric-card">
-        <div class="metric-value">{{STREAK}}</div>
-        <div class="metric-label">Day Streak</div>
+      <div class="stat-card">
+        <div class="stat-value">{{TOTAL_FILES}}</div>
+        <div class="stat-label">Files</div>
       </div>
     </section>
 
-    <section class="timeline">
-      <h2>Daily Changelog</h2>
+    <section class="chart-section">
+      <div class="chart-title">Lines of Code Over Time</div>
+      <div class="bar-chart">
+        {{LOC_BARS}}
+      </div>
+    </section>
+
+    <section class="timeline-section">
+      <h2 class="section-header">Changelog</h2>
       {{TIMELINE_ENTRIES}}
     </section>
 
     <footer>
-      <p>Last updated: {{LAST_UPDATED}}</p>
-      <p>Built entirely with Claude Code Cloud - no local dev environment needed</p>
+      <p class="footer-text">Last updated: <span class="footer-highlight">{{LAST_UPDATED}}</span></p>
+      <p class="footer-text" style="margin-top:0.3rem;">Built entirely in the cloud with <span class="footer-highlight">Claude Code</span></p>
     </footer>
   </div>
 </body>

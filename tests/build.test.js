@@ -23,9 +23,22 @@ describe('data files', () => {
   it('metrics.json is valid', () => {
     const data = JSON.parse(readFileSync(join(ROOT, 'data/metrics.json'), 'utf-8'));
     assert.ok(typeof data.total_days_active === 'number');
+    assert.ok(typeof data.total_commits === 'number');
+    assert.ok(typeof data.total_lines === 'number');
     assert.ok(typeof data.streak === 'number');
     assert.ok(data.last_updated);
     assert.ok(data.service_health);
+  });
+
+  it('snapshots.json is valid', () => {
+    const data = JSON.parse(readFileSync(join(ROOT, 'data/snapshots.json'), 'utf-8'));
+    assert.ok(Array.isArray(data.snapshots));
+    assert.ok(data.snapshots.length > 0);
+    for (const snap of data.snapshots) {
+      assert.ok(snap.date);
+      assert.ok(typeof snap.lines_of_code === 'number');
+      assert.ok(typeof snap.commits === 'number');
+    }
   });
 });
 
@@ -35,10 +48,13 @@ describe('build', () => {
     assert.ok(existsSync(join(ROOT, 'dist/index.html')));
   });
 
-  it('dist/index.html contains expected content', () => {
+  it('dist/index.html contains dashboard elements', () => {
     const html = readFileSync(join(ROOT, 'dist/index.html'), 'utf-8');
-    assert.ok(html.includes('Prototype Daily Service'));
+    assert.ok(html.includes('Build in Public'));
     assert.ok(html.includes('Days Active'));
+    assert.ok(html.includes('Commits'));
+    assert.ok(html.includes('Lines of Code'));
     assert.ok(html.includes('2026-03-26'));
+    assert.ok(html.includes('bar-chart'));
   });
 });
