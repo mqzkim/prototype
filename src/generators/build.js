@@ -224,6 +224,21 @@ function buildVideoLLMSection(research, t) {
     </div>`;
 }
 
+function buildSaaSSection(saas) {
+  if (!saas || !saas.daily || saas.daily.length === 0) return '<p class="muted-text">Pending first fetch</p>';
+  const latest = saas.daily[saas.daily.length - 1];
+  if (!latest.products || latest.products.length === 0) return '<p class="muted-text">No data yet</p>';
+  return latest.products.slice(0, 5).map((p, i) => `
+    <div class="saas-product">
+      <span class="saas-rank">#${i + 1}</span>
+      <div class="saas-info">
+        <span class="saas-name">${p.name}</span>
+        <span class="saas-tagline">${p.tagline || ''}</span>
+      </div>
+      ${p.votes ? `<span class="saas-votes">${p.votes}</span>` : ''}
+    </div>`).join('\n');
+}
+
 function buildArchiveList(entries) {
   return entries
     .slice()
@@ -263,6 +278,7 @@ function build() {
   const apiData = loadJSON('data/api-data.json');
   const quotes = loadJSON('data/quotes.json');
   const videoLLM = loadJSON('data/video-llm-research.json');
+  const saas = loadJSON('data/saas.json');
   const i18n = loadJSON('data/i18n.json');
 
   const template = readFileSync(join(ROOT, 'src/templates/index.html'), 'utf-8');
@@ -291,6 +307,7 @@ function build() {
       .replace('{{IMPROVEMENTS_SECTION}}', buildImprovementsSection(improvements))
       .replace('{{API_SECTION}}', buildAPISection(apiData))
       .replace('{{VIDEO_LLM_SECTION}}', buildVideoLLMSection(videoLLM, t))
+      .replace('{{SAAS_SECTION}}', buildSaaSSection(saas))
       .replace('{{ARCHIVE_LIST}}', buildArchiveList(dailyLog.entries))
       .replace('{{TIMELINE_ENTRIES}}', buildTimeline(dailyLog.entries))
       .replace('{{LAST_UPDATED}}', metrics.last_updated)
@@ -371,6 +388,20 @@ function build() {
           </div>`).join('\n');
       }
 
+      let saasHtml = `<p class="muted-text">${t.noSaaS}</p>`;
+      const saasEntry = saas?.daily?.find(d => d.date === date);
+      if (saasEntry?.products?.length > 0) {
+        saasHtml = saasEntry.products.slice(0, 10).map((p, idx) => `
+          <div class="saas-item">
+            <span class="saas-rank">#${idx + 1}</span>
+            <div class="saas-info">
+              <span class="saas-name">${p.name}</span>
+              <span class="saas-tagline">${p.tagline || ''}</span>
+            </div>
+            ${p.votes ? `<span class="saas-votes">${p.votes}</span>` : ''}
+          </div>`).join('\n');
+      }
+
       const changesHtml = entry.changes.length > 0
         ? `<ul class="changes-list">${entry.changes.map(c => `<li>${c}</li>`).join('\n')}</ul>`
         : `<p class="muted-text">${t.noChanges}</p>`;
@@ -385,6 +416,7 @@ function build() {
         .replace('{{STATS_HTML}}', statsHtml)
         .replace('{{API_HTML}}', apiHtml)
         .replace('{{TRENDING_HTML}}', trendingHtml)
+        .replace('{{SAAS_HTML}}', saasHtml)
         .replace('{{CHANGES_HTML}}', changesHtml);
       dayHtml = applyTranslations(dayHtml, t);
 

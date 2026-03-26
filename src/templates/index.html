@@ -269,7 +269,7 @@
     @media (max-width: 640px) {
       .feature-grid { grid-template-columns: 1fr; }
     }
-    .feature-card { padding: 1.3rem 1.4rem; }
+    .feature-card { padding: 1.3rem 1.4rem; overflow: hidden; min-width: 0; }
     .feature-card-title {
       font-size: 0.75rem;
       font-weight: 600;
@@ -334,6 +334,8 @@
       gap: 0.6rem;
       padding: 0.5rem 0;
       border-bottom: 1px solid var(--border);
+      max-width: 100%;
+      overflow: hidden;
     }
     .trending-repo:last-child { border-bottom: none; }
     .trending-rank {
@@ -342,9 +344,10 @@
       color: var(--cyan);
       font-weight: 700;
       min-width: 24px;
+      flex-shrink: 0;
       text-shadow: 0 0 8px var(--glow-cyan);
     }
-    .trending-info { flex: 1; min-width: 0; }
+    .trending-info { flex: 1; min-width: 0; overflow: hidden; }
     .trending-name {
       font-size: 0.82rem;
       font-weight: 600;
@@ -367,16 +370,22 @@
       gap: 0.5rem;
       align-items: center;
       flex-shrink: 0;
+      max-width: 120px;
     }
     .trending-lang {
       font-size: 0.65rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--violet);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70px;
     }
     .trending-stars {
       font-size: 0.7rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--amber);
+      white-space: nowrap;
     }
 
     /* Improvements */
@@ -427,6 +436,47 @@
       color: var(--muted);
       margin-top: 0.15rem;
     }
+    /* SaaS Products */
+    .saas-product {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .saas-product:last-child { border-bottom: none; }
+    .saas-rank {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--rose);
+      font-weight: 700;
+      min-width: 24px;
+      text-shadow: 0 0 8px rgba(244, 63, 94, 0.4);
+    }
+    .saas-info { flex: 1; min-width: 0; overflow: hidden; }
+    .saas-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .saas-tagline {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .saas-votes {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--rose);
+    }
+
     .muted-text {
       font-size: 0.8rem;
       color: var(--muted);
@@ -803,6 +853,12 @@
     <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
       <div class="feature-card-title">{{t.videoLLM}}</div>
       {{VIDEO_LLM_SECTION}}
+    </section>
+
+    <!-- Indie SaaS -->
+    <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
+      <div class="feature-card-title">{{t.indieSaaS}}</div>
+      {{SAAS_SECTION}}
     </section>
 
     <section class="timeline-section">

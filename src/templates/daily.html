@@ -97,19 +97,20 @@
     .trending-item {
       display:flex; align-items:center; gap:0.6rem;
       padding:0.5rem 0; border-bottom:1px solid var(--border);
+      max-width:100%; overflow:hidden;
     }
     .trending-item:last-child { border-bottom:none; }
     .trending-rank {
       font-family:'JetBrains Mono',monospace; font-size:0.7rem;
-      color:var(--cyan); font-weight:700; min-width:24px;
+      color:var(--cyan); font-weight:700; min-width:24px; flex-shrink:0;
       text-shadow:0 0 8px var(--glow-cyan);
     }
-    .trending-info { flex:1; min-width:0; }
+    .trending-info { flex:1; min-width:0; overflow:hidden; }
     .trending-name { font-size:0.85rem; font-weight:600; color:var(--text); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .trending-desc { font-size:0.72rem; color:var(--muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .trending-meta { display:flex; gap:0.5rem; align-items:center; flex-shrink:0; }
-    .trending-lang { font-size:0.65rem; font-family:'JetBrains Mono',monospace; color:var(--violet); }
-    .trending-stars { font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--amber); }
+    .trending-meta { display:flex; gap:0.5rem; align-items:center; flex-shrink:0; max-width:120px; }
+    .trending-lang { font-size:0.65rem; font-family:'JetBrains Mono',monospace; color:var(--violet); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70px; }
+    .trending-stars { font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--amber); white-space:nowrap; }
 
     /* API */
     .api-row { display:flex; gap:1.5rem; flex-wrap:wrap; }
@@ -138,7 +139,7 @@
       color:var(--rose); font-weight:700; min-width:24px;
       text-shadow:0 0 8px rgba(244,63,94,0.4);
     }
-    .saas-info { flex:1; min-width:0; }
+    .saas-info { flex:1; min-width:0; overflow:hidden; }
     .saas-name { font-size:0.85rem; font-weight:600; color:var(--text); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .saas-tagline { font-size:0.72rem; color:var(--muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .saas-votes { font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--rose); }

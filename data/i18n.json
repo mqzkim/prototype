@@ -44,7 +44,9 @@
     "closedSource": "Closed",
     "perSec": "/sec",
     "resolution": "Resolution",
-    "capabilities": "Capabilities"
+    "capabilities": "Capabilities",
+    "indieSaaS": "Indie SaaS",
+    "noSaaS": "No SaaS data yet"
   },
   "ko": {
     "lang": "ko",
@@ -91,6 +93,8 @@
     "closedSource": "클로즈드",
     "perSec": "/초",
     "resolution": "해상도",
-    "capabilities": "기능"
+    "capabilities": "기능",
+    "indieSaaS": "인디 SaaS",
+    "noSaaS": "SaaS 데이터 없음"
   }
 }

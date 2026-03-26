@@ -5,7 +5,7 @@
       "Bash(npm run build)",
       "Bash(npm run daily)",
       "Bash(npm test)",
-      "Bash(npm run lint)",
+      "Bash(npm run validate:design)",
       "Bash(node *)"
     ]
   },

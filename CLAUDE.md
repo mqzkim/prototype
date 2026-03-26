@@ -79,6 +79,7 @@ Daily Cron이 코드베이스를 자동 평가하고, 점수를 올리기 위한
     ├─ fetch-trending.js     → data/trending.json (누적)
     ├─ log-improvement.js    → data/improvements.json (누적)
     ├─ fetch-apis.js         → data/api-data.json (누적)
+    ├─ fetch-saas.js         → data/saas.json (누적)
     ├─ evaluate-rules.js     → data/evaluation-scores.json (누적)
     └─ daily-update.js       → data/daily-log.json + data/metrics.json (누적)
 
@@ -96,8 +97,10 @@ Daily Cron이 코드베이스를 자동 평가하고, 점수를 올리기 위한
 ├── CLAUDE.md
 ├── RULES.md                     # ★ 고정 평가 기준 (100점, 5개 카테고리)
 ├── .claude/
-│   ├── settings.json
-│   ├── triggers.json
+│   ├── settings.json       # Claude Code 설정 + SessionStart hook
+│   ├── triggers.json       # Claude Code 크론 트리거 정의
+│   ├── agents/
+│   │   └── design-reviewer.md  # 디자인 검증 에이전트 정의
 │   └── hooks/
 │       └── session-start.sh
 ├── src/
@@ -142,12 +145,14 @@ Daily Cron이 코드베이스를 자동 평가하고, 점수를 올리기 위한
 │   ├── daily-update.js           # 메인 크론 (7개 모듈 호출)
 │   ├── evaluate-rules.js         # ★ RULES.md 평가 엔진
 │   ├── lint.js                   # ★ Zero-dep 린터
-│   ├── collect-stats.js
-│   ├── select-quote.js
-│   ├── generate-til.js
-│   ├── fetch-trending.js
-│   ├── log-improvement.js
-│   └── fetch-apis.js
+│   ├── collect-stats.js          # 레포 통계 수집
+│   ├── select-quote.js           # 날짜 기반 명언 선택
+│   ├── generate-til.js           # 코드 분석 기반 TIL
+│   ├── fetch-trending.js         # GitHub trending 스크래핑
+│   ├── log-improvement.js        # git commit 분석 → 개선 로그
+│   ├── fetch-apis.js             # 환율 + 날씨 API 수집
+│   ├── fetch-saas.js             # 인디 SaaS 제품 수집 (Product Hunt)
+│   └── validate-design.js        # 디자인 검증 하네스
 ├── data/                         # ★ git-tracked, 매일 누적
 │   ├── daily-log.json
 │   ├── metrics.json
@@ -157,6 +162,7 @@ Daily Cron이 코드베이스를 자동 평가하고, 점수를 올리기 위한
 │   ├── trending.json
 │   ├── improvements.json
 │   ├── api-data.json
+│   ├── saas.json                 # 인디 SaaS 제품 히스토리
 │   ├── i18n.json
 │   ├── video-llm-research.json   # 비디오 모델 리서치
 │   ├── video-llm-cost-plan.json  # SaaS 비용 분석
@@ -184,9 +190,10 @@ Daily Cron이 코드베이스를 자동 평가하고, 점수를 올리기 위한
 - `npm run build` - 사이트 빌드 (dist/ 생성)
 - `npm run daily` - 데일리 업데이트 실행 (7개 모듈 + 평가)
 - `npm start` - API 서버 시작 (port 3000)
-- `npm test` - 전체 테스트 실행 (49개 테스트)
+- `npm test` - 전체 테스트 실행
 - `npm run lint` - 린트 실행 (zero-dep)
 - `npm run evaluate` - RULES.md 기준 코드베이스 평가
+- `npm run validate:design` - 디자인 검증 하네스 실행
 
 ## Development Rules
 1. 모든 데이터는 `data/` 디렉토리에 JSON으로 저장, **반드시 git-tracked**
@@ -197,6 +204,36 @@ Daily Cron이 코드베이스를 자동 평가하고, 점수를 올리기 위한
 6. **Zero runtime dependencies** — Node.js 내장 모듈만 사용
 7. **RULES.md는 절대 수정하지 않음** — 평가 기준은 고정
 8. 서버 라우트에서 **readFileSync 금지** — async I/O만 사용
+
+## Design Validation Harness
+UI 변경 시 반드시 디자인 검증 하네스를 실행합니다.
+
+### 검증 파이프라인
+```
+npm run build && npm run validate:design
+```
+
+### 검증 항목
+| 카테고리 | 검증 내용 |
+|---------|----------|
+| **섹션 완결성** | 모든 필수 섹션이 en/ko 빌드에 존재하는지 확인 |
+| **Overflow 보호** | flex/grid 컨테이너의 overflow 제어, text-overflow:ellipsis 적용 |
+| **i18n 완결성** | `{{t.*}}`, `{{TEMPLATE}}` 미치환 변수 잔존 여부 |
+| **접근성** | charset, viewport, title, lang 속성 존재 |
+| **레이아웃 무결성** | 반응형 breakpoint, 카드 구조 검증 |
+| **일별 페이지** | 최신 daily 페이지의 플레이스홀더 미잔존 확인 |
+
+### 에이전트
+- `.claude/agents/design-reviewer.md` — 디자인 검증 전담 에이전트 정의
+- 새 UI 섹션 추가, CSS 변경, 템플릿 수정, 배포 전 점검 시 사용
+
+### 새 섹션 추가 시 체크리스트
+1. `src/templates/index.html` — 섹션 HTML + CSS 추가
+2. `src/templates/daily.html` — 일별 페이지에도 반영
+3. `data/i18n.json` — en/ko 번역 키 추가
+4. `src/generators/build.js` — 빌드 함수 + replace 추가
+5. `scripts/validate-design.js` — 필수 섹션 목록에 추가
+6. `npm run validate:design` — 검증 통과 확인
 
 ## Cloud-Only Workflow
 - 클론 후 `npm install && npm run build`로 즉시 실행 가능

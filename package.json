@@ -4,12 +4,13 @@
   "description": "Cloud-native daily service powered by Claude Code cron jobs",
   "type": "module",
   "scripts": {
-    "build": "node src/generators/build.js",
+    "build": "node src/generators/build.js && node scripts/validate-design.js",
     "daily": "node scripts/daily-update.js",
     "start": "node src/server/index.js",
     "test": "node --test tests/build.test.js tests/video-llm/router.test.js tests/video-llm/adapters.test.js tests/server/integration.test.js tests/client/sdk.test.js",
     "lint": "node scripts/lint.js",
-    "evaluate": "node scripts/evaluate-rules.js"
+    "evaluate": "node scripts/evaluate-rules.js",
+    "validate:design": "node scripts/validate-design.js"
   },
   "keywords": ["claude-code", "cloud-native", "daily-service"],
   "license": "MIT"
