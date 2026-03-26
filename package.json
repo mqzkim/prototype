@@ -7,10 +7,12 @@
     "build": "node src/generators/build.js && node scripts/validate-design.js",
     "daily": "node scripts/daily-update.js",
     "start": "node src/server/index.js",
-    "test": "node --test tests/build.test.js tests/video-llm/router.test.js tests/video-llm/adapters.test.js tests/server/integration.test.js tests/client/sdk.test.js",
+    "test": "node --test tests/build.test.js tests/data-schema.test.js tests/server/router.test.js tests/server/integration.test.js tests/server/middleware/auth.test.js tests/server/middleware/cors.test.js tests/server/middleware/logger.test.js tests/server/middleware/rate-limit.test.js tests/server/utils/response.test.js tests/server/utils/validation.test.js tests/server/utils/api-keys.test.js tests/server/utils/usage-tracker.test.js tests/video-llm/router.test.js tests/video-llm/adapters.test.js tests/video-llm/adapters-impl.test.js tests/video-llm/index.test.js tests/video-llm/config.test.js tests/client/sdk.test.js",
     "lint": "node scripts/lint.js",
     "evaluate": "node scripts/evaluate-rules.js",
-    "validate:design": "node scripts/validate-design.js"
+    "validate:design": "node scripts/validate-design.js",
+    "evaluate:structural": "node scripts/evaluate-structural.js --prepare",
+    "evaluate:all": "npm run evaluate && npm run evaluate:structural"
   },
   "keywords": ["claude-code", "cloud-native", "daily-service"],
   "license": "MIT"

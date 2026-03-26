@@ -30,6 +30,8 @@
  *   const costs = router.compareCosts(10, '1080p');
  */
 
+import { VideoRouter } from './router.js';
+
 export { VideoRouter } from './router.js';
 export { PROVIDERS, ROUTING_RULES, DEFAULT_OPTIONS } from './config.js';
 export { BaseAdapter } from './adapters/base.js';

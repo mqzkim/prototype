@@ -2,13 +2,13 @@
   "evaluations": [
     {
       "date": "2026-03-26",
-      "totalScore": 94,
+      "totalScore": 100,
       "maxScore": 100,
-      "percentage": 94,
+      "percentage": 100,
       "passing": true,
       "categories": {
         "code-quality": {
-          "score": 19,
+          "score": 20,
           "max": 20,
           "details": {
             "CQ-01": {
@@ -27,9 +27,9 @@
               "measurement": 0
             },
             "CQ-04": {
-              "score": 3,
+              "score": 4,
               "max": 4,
-              "measurement": 0.86
+              "measurement": 0.91
             },
             "CQ-05": {
               "score": 4,
@@ -39,7 +39,7 @@
           }
         },
         "test-coverage": {
-          "score": 22,
+          "score": 25,
           "max": 25,
           "details": {
             "TC-01": {
@@ -48,9 +48,9 @@
               "measurement": true
             },
             "TC-02": {
-              "score": 2,
+              "score": 5,
               "max": 5,
-              "measurement": 0.19
+              "measurement": 0.69
             },
             "TC-03": {
               "score": 4,
@@ -60,7 +60,7 @@
             "TC-04": {
               "score": 4,
               "max": 4,
-              "measurement": 27.6
+              "measurement": 18.8
             },
             "TC-05": {
               "score": 4,
@@ -102,12 +102,12 @@
             "PERF-01": {
               "score": 5,
               "max": 5,
-              "measurement": 50
+              "measurement": 48
             },
             "PERF-02": {
               "score": 5,
               "max": 5,
-              "measurement": 5
+              "measurement": 8
             },
             "PERF-03": {
               "score": 5,
@@ -117,7 +117,7 @@
           }
         },
         "documentation": {
-          "score": 18,
+          "score": 20,
           "max": 20,
           "details": {
             "DOC-01": {
@@ -141,9 +141,9 @@
               "measurement": true
             },
             "DOC-05": {
-              "score": 2,
+              "score": 4,
               "max": 4,
-              "measurement": 0.53
+              "measurement": 0.94
             }
           }
         }
@@ -176,10 +176,10 @@
         {
           "id": "CQ-04",
           "name": "All functions are 40 lines or fewer",
-          "score": 3,
+          "score": 4,
           "max": 4,
-          "measurement": 0.86,
-          "pass": false
+          "measurement": 0.91,
+          "pass": true
         },
         {
           "id": "CQ-05",
@@ -200,10 +200,10 @@
         {
           "id": "TC-02",
           "name": "Test file count >= source file count * 0.5",
-          "score": 2,
+          "score": 5,
           "max": 5,
-          "measurement": 0.19,
-          "pass": false
+          "measurement": 0.69,
+          "pass": true
         },
         {
           "id": "TC-03",
@@ -218,7 +218,7 @@
           "name": "Average assertions per test file >= 3",
           "score": 4,
           "max": 4,
-          "measurement": 27.6,
+          "measurement": 18.8,
           "pass": true
         },
         {
@@ -266,7 +266,7 @@
           "name": "Server starts and responds to /health in < 500ms",
           "score": 5,
           "max": 5,
-          "measurement": 50,
+          "measurement": 48,
           "pass": true
         },
         {
@@ -274,7 +274,7 @@
           "name": "Health endpoint responds in < 50ms",
           "score": 5,
           "max": 5,
-          "measurement": 5,
+          "measurement": 8,
           "pass": true
         },
         {
@@ -320,10 +320,10 @@
         {
           "id": "DOC-05",
           "name": "All data/ JSON files have schema validation in tests",
-          "score": 2,
+          "score": 4,
           "max": 4,
-          "measurement": 0.53,
-          "pass": false
+          "measurement": 0.94,
+          "pass": true
         }
       ]
     }

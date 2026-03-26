@@ -17,7 +17,7 @@ const ROOT = join(__dirname, '..');
  */
 function loadRulesSchema() {
   const md = readFileSync(join(ROOT, 'RULES.md'), 'utf-8');
-  const match = md.match(/```json\n([\s\S]*?)\n```/);
+  const match = md.match(/```json\r?\n([\s\S]*?)\r?\n```/);
   if (!match) throw new Error('No JSON schema found in RULES.md');
   return JSON.parse(match[1]);
 }

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VideoLLM — Unified Video AI API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050508;
+      --surface: #0c0c14;
+      --card: rgba(14, 14, 24, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e2e4ec;
+      --muted: #6b6d84;
+      --violet: #8b5cf6;
+      --cyan: #06b6d4;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+      --glow-violet: rgba(139, 92, 246, 0.15);
+      --glow-cyan: rgba(6, 182, 212, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -30%; left: -15%;
+      width: 55%; height: 70%;
+      background: radial-gradient(ellipse, var(--glow-violet) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20%; right: -15%;
+      width: 55%; height: 60%;
+      background: radial-gradient(ellipse, var(--glow-cyan) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- Nav ---- */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--violet), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ---- Hero ---- */
+    .hero {
+      text-align: center;
+      padding: 6rem 0 4rem;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(139, 92, 246, 0.12);
+      color: var(--violet);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--violet), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--violet), #6d28d9);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 30px rgba(139, 92, 246, 0.5);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.15); }
+
+    /* ---- Stats bar ---- */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 2rem 0;
+      flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: 1.75rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, var(--violet), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* ---- Section ---- */
+    section { padding: 4rem 0; }
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 550px;
+      margin: 0 auto 3rem;
+    }
+
+    /* ---- Features grid ---- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(139, 92, 246, 0.25);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .feature-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ---- Models ---- */
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .model-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .model-card:hover { border-color: rgba(6, 182, 212, 0.3); }
+    .model-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .model-provider {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .model-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--emerald);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    /* ---- Code example ---- */
+    .code-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .code-block {
+      background: #0a0a12;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+    }
+    .code-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .code-block pre {
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      color: #c4c6d4;
+    }
+    .code-block .kw { color: var(--violet); }
+    .code-block .str { color: var(--emerald); }
+    .code-block .cm { color: #4a4b5e; }
+    .code-block .fn { color: var(--cyan); }
+    .code-info { padding-top: 0.5rem; }
+    .code-info h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .code-info p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .code-features { list-style: none; }
+    .code-features li {
+      font-size: 0.85rem;
+      color: var(--muted);
+      padding: 0.35rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .code-features li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+      flex-shrink: 0;
+    }
+
+    /* ---- Pricing ---- */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.25rem;
+      align-items: start;
+    }
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem 1.5rem;
+      position: relative;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .pricing-card:hover {
+      transform: translateY(-2px);
+    }
+    .pricing-card.popular {
+      border-color: var(--violet);
+      box-shadow: 0 0 40px rgba(139, 92, 246, 0.15);
+    }
+    .popular-tag {
+      position: absolute;
+      top: -0.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.2rem 1rem;
+      background: linear-gradient(135deg, var(--violet), #6d28d9);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .pricing-tier {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .pricing-price {
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.25rem;
+    }
+    .pricing-price span { font-size: 1rem; color: var(--muted); font-weight: 500; }
+    .pricing-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-features { list-style: none; margin-bottom: 1.5rem; }
+    .pricing-features li {
+      font-size: 0.8rem;
+      padding: 0.35rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text);
+    }
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--emerald);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+    .pricing-btn {
+      display: block;
+      width: 100%;
+      padding: 0.65rem;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .pricing-btn-default {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .pricing-btn-default:hover { border-color: rgba(255,255,255,0.15); }
+    .pricing-btn-primary {
+      background: linear-gradient(135deg, var(--violet), #6d28d9);
+      color: #fff;
+      border: none;
+    }
+    .pricing-btn-primary:hover { box-shadow: 0 4px 20px rgba(139,92,246,0.4); }
+
+    /* ---- Routing ---- */
+    .routing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .routing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .routing-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .routing-strategy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      margin-bottom: 0.5rem;
+    }
+    .routing-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ---- CTA ---- */
+    .cta {
+      text-align: center;
+      padding: 5rem 0;
+    }
+    .cta h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    .cta p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    /* ---- Footer ---- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--violet); text-decoration: none; }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .code-section { grid-template-columns: 1fr; }
+      .stats-bar { gap: 1.5rem; }
+      .nav-links { gap: 1rem; }
+      .hero { padding: 4rem 0 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <nav>
+    <div class="logo">VideoLLM</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#models">Models</a>
+      <a href="#pricing">Pricing</a>
+      <a href="https://prototype-qong.onrender.com/v1/health" target="_blank">API Status</a>
+      <a href="https://prototype-qong.onrender.com/v1/models" target="_blank" class="btn btn-primary" style="padding:0.5rem 1.25rem;font-size:0.8rem;">Get API Key</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">&#9889; 8 Video AI Models — One API</div>
+    <h1>Build with <span class="gradient">Video AI</span><br>in minutes, not months</h1>
+    <p class="hero-sub">
+      Unified API for video generation & understanding.
+      Smart routing picks the best model for each task.
+      Pay less than going direct.
+    </p>
+    <div class="hero-actions">
+      <a href="https://prototype-qong.onrender.com/v1/health" target="_blank" class="btn btn-primary">Start Free &rarr;</a>
+      <a href="#code" class="btn btn-secondary">View API Docs</a>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">8</div>
+      <div class="stat-label">AI Models</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4K</div>
+      <div class="stat-label">Max Resolution</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">&lt;200ms</div>
+      <div class="stat-label">API Latency</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">99.9%</div>
+      <div class="stat-label">Uptime SLA</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section id="features">
+    <h2 class="section-title">Everything you need</h2>
+    <p class="section-sub">One integration to access every major video AI model with smart routing and cost optimization.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(139,92,246,0.1);">&#128279;</div>
+        <h3>Unified Video AI API</h3>
+        <p>Single REST endpoint for generation and understanding. Switch models with one parameter — no rewiring.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(6,182,212,0.1);">&#9889;</div>
+        <h3>Smart Routing</h3>
+        <p>Automatically picks the best model based on your goal: quality, cost, motion fidelity, or cinema style.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(16,185,129,0.1);">&#128200;</div>
+        <h3>Cost Comparison</h3>
+        <p>Real-time pricing across all providers. See exactly what each generation costs before you commit.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.1);">&#127899;</div>
+        <h3>8 Models Supported</h3>
+        <p>Veo 3.1, Kling 3.0, Seedance 2.0, Runway Gen-4.5, Gemini 3 Pro, GPT-4o, and more.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Models -->
+  <section id="models">
+    <h2 class="section-title">Supported Models</h2>
+    <p class="section-sub">Access the world's leading video AI models through a single API.</p>
+    <div class="models-grid">
+      <div class="model-card">
+        <div class="model-name">Veo 3.1</div>
+        <div class="model-provider">Google DeepMind</div>
+        <div class="model-tag">Photorealism / 4K</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Kling 3.0</div>
+        <div class="model-provider">Kuaishou</div>
+        <div class="model-tag">Best Motion / Low Cost</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Seedance 2.0</div>
+        <div class="model-provider">ByteDance</div>
+        <div class="model-tag">Cinema Quality</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Runway Gen-4.5</div>
+        <div class="model-provider">Runway</div>
+        <div class="model-tag">Creator Friendly</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Gemini 3 Pro</div>
+        <div class="model-provider">Google</div>
+        <div class="model-tag">Understanding SOTA</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">GPT-4o</div>
+        <div class="model-provider">OpenAI</div>
+        <div class="model-tag">Multimodal Reasoning</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Pika 2.2</div>
+        <div class="model-provider">Pika Labs</div>
+        <div class="model-tag">Creative Effects</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Luma Ray 3</div>
+        <div class="model-provider">Luma AI</div>
+        <div class="model-tag">Fast Generation</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Code Example -->
+  <section id="code">
+    <h2 class="section-title">Simple by design</h2>
+    <p class="section-sub">Three lines of code to generate your first video. No complex setup required.</p>
+    <div class="code-section">
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dot" style="background:#f43f5e;"></div>
+          <div class="code-dot" style="background:#f59e0b;"></div>
+          <div class="code-dot" style="background:#10b981;"></div>
+          generate.js
+        </div>
+        <pre><span class="kw">import</span> { VideoLLMClient } <span class="kw">from</span> <span class="str">'videollm-sdk'</span>;
+
+<span class="kw">const</span> client = <span class="kw">new</span> <span class="fn">VideoLLMClient</span>({
+  baseURL: <span class="str">'https://prototype-qong.onrender.com'</span>,
+  apiKey:  <span class="str">'your-api-key'</span>
+});
+
+<span class="cm">// Generate video with smart routing</span>
+<span class="kw">const</span> result = <span class="kw">await</span> client.<span class="fn">generate</span>({
+  prompt: <span class="str">'A drone shot over neon Tokyo at night'</span>,
+  strategy: <span class="str">'best-quality'</span>,  <span class="cm">// or 'best-value'</span>
+  resolution: <span class="str">'4k'</span>
+});
+
+console.<span class="fn">log</span>(result.videoUrl);
+<span class="cm">// → https://...output.mp4</span></pre>
+      </div>
+      <div class="code-info">
+        <h3>Developer-first API</h3>
+        <p>Built for engineers who need video AI without the complexity of managing multiple provider integrations.</p>
+        <ul class="code-features">
+          <li>Bearer token authentication</li>
+          <li>RESTful JSON endpoints</li>
+          <li>Smart routing strategies: best-quality, best-value, best-motion, cinema</li>
+          <li>Real-time cost estimation before generation</li>
+          <li>Usage tracking per API key</li>
+          <li>Webhook callbacks for async results</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Smart Routing -->
+  <section>
+    <h2 class="section-title">Smart Routing Strategies</h2>
+    <p class="section-sub">Let the router pick the optimal model, or choose your own.</p>
+    <div class="routing-grid">
+      <div class="routing-card">
+        <div class="routing-name">Best Quality</div>
+        <div class="routing-strategy">strategy: "best-quality"</div>
+        <div class="routing-desc">Routes to Veo 3.1 for generation + Gemini 3 Pro for understanding. Maximum fidelity and 4K output.</div>
+      </div>
+      <div class="routing-card">
+        <div class="routing-name">Best Value</div>
+        <div class="routing-strategy">strategy: "best-value" (default)</div>
+        <div class="routing-desc">Routes to Kling 3.0 + GPT-4o. Great results at the lowest cost per generation.</div>
+      </div>
+      <div class="routing-card">
+        <div class="routing-name">Best Motion</div>
+        <div class="routing-strategy">strategy: "best-motion"</div>
+        <div class="routing-desc">Routes to Kling 3.0 for best-in-class motion quality + Gemini for analysis.</div>
+      </div>
+      <div class="routing-card">
+        <div class="routing-name">Cinema</div>
+        <div class="routing-strategy">strategy: "cinema"</div>
+        <div class="routing-desc">Routes to Seedance 2.0 for cinematic look and feel + Gemini for scene understanding.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <h2 class="section-title">Simple, transparent pricing</h2>
+    <p class="section-sub">Start free. Scale as you grow. No hidden fees.</p>
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Free</div>
+        <div class="pricing-price">$0<span> /mo</span></div>
+        <div class="pricing-desc">Try it out, no credit card required</div>
+        <ul class="pricing-features">
+          <li>5 generations / month</li>
+          <li>720p max resolution</li>
+          <li>Best-value routing only</li>
+          <li>Community support</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-default">Get Started</a>
+      </div>
+      <!-- Starter -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-price">$19<span> /mo</span></div>
+        <div class="pricing-desc">For indie creators and small projects</div>
+        <ul class="pricing-features">
+          <li>50 generations / month</li>
+          <li>1080p max resolution</li>
+          <li>All routing strategies</li>
+          <li>Cost comparison API</li>
+          <li>Email support</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-default">Start Trial</a>
+      </div>
+      <!-- Pro -->
+      <div class="pricing-card popular">
+        <div class="popular-tag">Most Popular</div>
+        <div class="pricing-tier">Pro</div>
+        <div class="pricing-price">$79<span> /mo</span></div>
+        <div class="pricing-desc">For teams and production workloads</div>
+        <ul class="pricing-features">
+          <li>250 generations / month</li>
+          <li>4K max resolution</li>
+          <li>All routing strategies</li>
+          <li>Priority model access</li>
+          <li>Usage analytics dashboard</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-primary">Start Trial</a>
+      </div>
+      <!-- Enterprise -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Enterprise</div>
+        <div class="pricing-price">$299<span> /mo</span></div>
+        <div class="pricing-desc">For high-volume and custom needs</div>
+        <ul class="pricing-features">
+          <li>1,000 generations / month</li>
+          <li>4K max resolution</li>
+          <li>Custom routing rules</li>
+          <li>Dedicated capacity</li>
+          <li>SLA guarantee (99.9%)</li>
+          <li>Dedicated account manager</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-default">Contact Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Ready to build with Video AI?</h2>
+    <p>Get your API key and generate your first video in under a minute.</p>
+    <div class="hero-actions">
+      <a href="https://prototype-qong.onrender.com/v1/health" target="_blank" class="btn btn-primary">Start Free &rarr;</a>
+      <a href="https://prototype-qong.onrender.com/v1/models" target="_blank" class="btn btn-secondary">View Models</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>VideoLLM &mdash; Unified Video AI API &middot; Built with <a href="https://prototype-qong.onrender.com">prototype-qong</a></p>
+  </footer>
+</div>
+
+</body>
+</html>
