@@ -21,6 +21,7 @@
     ├─ fetch-trending.js   → data/trending.json (누적)
     ├─ log-improvement.js  → data/improvements.json (누적)
     ├─ fetch-apis.js       → data/api-data.json (누적)
+    ├─ fetch-saas.js       → data/saas.json (누적)
     └─ daily-update.js     → data/daily-log.json + data/metrics.json (누적)
 
   npm run build            → dist/index.html (모든 data/ 반영)
@@ -53,7 +54,8 @@
 │   ├── generate-til.js      # 코드 분석 기반 TIL 자동 생성
 │   ├── fetch-trending.js    # GitHub trending 스크래핑
 │   ├── log-improvement.js   # git commit 분석 → 개선 로그
-│   └── fetch-apis.js        # 환율 + 날씨 API 수집
+│   ├── fetch-apis.js        # 환율 + 날씨 API 수집
+│   └── fetch-saas.js        # 인디 SaaS 제품 수집 (Product Hunt)
 ├── data/                    # ★ git-tracked, 매일 누적되는 데이터
 │   ├── daily-log.json       # 일별 changelog (version, changes, stats)
 │   ├── metrics.json         # 현재 메트릭 (streak, totals)
@@ -64,6 +66,7 @@
 │   ├── trending.json        # GitHub trending 히스토리
 │   ├── improvements.json    # 자동 개선 로그
 │   ├── api-data.json        # 환율/날씨 히스토리
+│   ├── saas.json            # 인디 SaaS 제품 히스토리
 │   └── i18n.json            # 다국어(en/ko) 번역 데이터
 ├── dist/                    # 빌드 결과 (gitignore)
 ├── tests/

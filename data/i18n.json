@@ -34,6 +34,8 @@
     "noApiData": "No API data",
     "noTrending": "No trending data",
     "noChanges": "No changes recorded",
+    "indieSaaS": "Indie SaaS",
+    "noSaaS": "No SaaS data yet",
     "partOf": "Part of"
   },
   "ko": {
@@ -71,6 +73,8 @@
     "noApiData": "API 데이터 없음",
     "noTrending": "트렌딩 데이터 없음",
     "noChanges": "기록된 변경사항 없음",
+    "indieSaaS": "인디 SaaS",
+    "noSaaS": "SaaS 데이터 없음",
     "partOf": "프로젝트:"
   }
 }

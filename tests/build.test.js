@@ -65,6 +65,11 @@ describe('data files', () => {
     assert.ok(data.stats);
     assert.ok(typeof data.stats.total_improvements === 'number');
   });
+
+  it('saas.json is valid', () => {
+    const data = loadJSON('saas.json');
+    assert.ok(Array.isArray(data.daily));
+  });
 });
 
 describe('build', () => {
@@ -90,6 +95,7 @@ describe('build', () => {
     assert.ok(html.includes('GitHub Trending'));
     assert.ok(html.includes('Auto Improvements'));
     assert.ok(html.includes('Live Data'));
+    assert.ok(html.includes('Indie SaaS'));
     assert.ok(html.includes('Changelog'));
     assert.ok(html.includes('lang="en"'));
   });
