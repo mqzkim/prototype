@@ -85,8 +85,21 @@ npm run build  # 자동으로 validate:design 실행됨
 
 ## 학습된 교훈
 
-### 2026-03-26: GitHub Trending overflow 사건
-- **증상**: trending 카드의 긴 description과 language 라벨이 카드 밖으로 넘침
-- **원인**: `text-overflow:ellipsis`는 있었지만 `white-space:nowrap` + `overflow:hidden`이 불완전
-- **교훈**: 개별 속성이 아니라 **패턴 전체**를 검증해야 함
-- **반영**: validate:design을 패턴 기반 휴리스틱으로 전면 개편
+### 2026-03-26 #1: Ellipsis Triplet 누락
+- **증상**: trending 카드의 긴 텍스트가 카드 밖으로 넘침
+- **원인**: `text-overflow:ellipsis`만 있고 `white-space:nowrap` + `overflow:hidden` 불완전
+- **교훈**: 개별 속성이 아니라 **패턴 전체(triplet)**를 검증해야 함
+- **반영**: Ellipsis Triplet 검증 추가
+
+### 2026-03-26 #2: Grid Item min-width:auto 함정
+- **증상**: `.feature-card`에 `overflow:hidden` 있는데도 텍스트가 카드 밖으로 넘침
+- **원인**: CSS Grid item의 기본값이 `min-width:auto` → grid cell 자체가 콘텐츠만큼 팽창 → `overflow:hidden`이 무효화
+- **교훈**: `overflow:hidden`만으로는 부족. Grid/flex item에는 반드시 `min-width:0`을 함께 적용해야 실제로 clipping이 동작함
+- **반영**: grid-item 검증에 `min-width:0` 필수 체크 추가
+- **패턴**:
+  ```css
+  .grid-item {
+    min-width: 0;       /* ← 이것 없으면 overflow:hidden 무효 */
+    overflow: hidden;
+  }
+  ```

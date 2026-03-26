@@ -136,14 +136,20 @@ function validateOverflow(html, locale) {
     );
   }
 
-  // ── D. Cards inside grid must clip children ──
-  // feature-card is inside feature-grid (50% width) — must have overflow:hidden
-  const cardContainers = ['feature-card'];
-  for (const cls of cardContainers) {
+  // ── D. Grid items must have min-width:0 + overflow:hidden ──
+  // Grid items default to min-width:auto, which prevents them from shrinking
+  // below content size. Without min-width:0, overflow:hidden has NO EFFECT
+  // because the grid cell itself expands to fit content.
+  const gridItemClasses = ['feature-card'];
+  for (const cls of gridItemClasses) {
     const rules = getCSSRulesForClass(css, cls);
     if (!rules) continue;
     check(
-      `card-container: .${cls} clips children (overflow:hidden)`,
+      `grid-item: .${cls} has min-width:0 (prevents grid blowout)`,
+      rules.includes('min-width')
+    );
+    check(
+      `grid-item: .${cls} has overflow:hidden (clips children)`,
       rules.includes('overflow') && rules.includes('hidden')
     );
   }
