@@ -8,6 +8,12 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   daily-update:
@@ -24,7 +30,7 @@ jobs:
 
       - run: npm install
 
-      - name: Run daily update (all 5 features)
+      - name: Run daily update (all 6 features)
         run: npm run daily
 
       - name: Rebuild site
@@ -51,3 +57,18 @@ jobs:
           - Exchange rates & Seoul weather
           - Repo stats snapshot"
           git push
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+  deploy:
+    needs: daily-update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
