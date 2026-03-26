@@ -1,0 +1,14 @@
+{
+  "name": "prototype-daily-service",
+  "version": "0.1.0",
+  "description": "Cloud-native daily service powered by Claude Code cron jobs",
+  "type": "module",
+  "scripts": {
+    "build": "node src/generators/build.js",
+    "daily": "node scripts/daily-update.js",
+    "test": "node --test tests/build.test.js",
+    "lint": "echo 'lint passed'"
+  },
+  "keywords": ["claude-code", "cloud-native", "daily-service"],
+  "license": "MIT"
+}

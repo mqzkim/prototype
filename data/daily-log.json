@@ -1,0 +1,14 @@
+{
+  "entries": [
+    {
+      "date": "2026-03-26",
+      "version": "0.1.0",
+      "changes": ["Initial project setup", "Cloud-only architecture established"],
+      "metrics": {
+        "features_added": 1,
+        "bugs_fixed": 0,
+        "improvements": 0
+      }
+    }
+  ]
+}
