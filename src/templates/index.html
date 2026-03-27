@@ -99,8 +99,8 @@
     }
 
     h1 {
-      font-size: 3rem;
-      font-weight: 800;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
       background: var(--gradient-main);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -857,11 +857,15 @@
       </div>
     </div>
 
+    <div class="section-divider"><h2>{{t.liveData}}</h2></div>
+
     <!-- API Dashboard -->
     <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
       <div class="feature-card-title">{{t.liveData}}</div>
       {{API_SECTION}}
     </section>
+
+    <div class="section-divider"><h2>{{t.githubTrending}} / {{t.autoImprovements}}</h2></div>
 
     <!-- Trending + Improvements -->
     <div class="feature-grid">
@@ -877,11 +881,15 @@
       </div>
     </div>
 
+    <div class="section-divider"><h2>{{t.videoLLM}}</h2></div>
+
     <!-- Video LLM Research -->
     <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
       <div class="feature-card-title">{{t.videoLLM}}</div>
       {{VIDEO_LLM_SECTION}}
     </section>
+
+    <div class="section-divider"><h2>{{t.indieSaaS}}</h2></div>
 
     <!-- Indie SaaS -->
     <section class="glow-card" style="padding:1.3rem 1.4rem; margin:1.5rem 0;">
@@ -890,12 +898,12 @@
     </section>
 
     <section class="timeline-section">
-      <h2 class="section-header">{{t.changelog}}</h2>
+      <div class="section-divider"><h2>{{t.changelog}}</h2></div>
       {{TIMELINE_ENTRIES}}
     </section>
 
     <section class="archive-section">
-      <h2 class="section-header">{{t.dailyArchive}}</h2>
+      <div class="section-divider"><h2>{{t.dailyArchive}}</h2></div>
       {{ARCHIVE_LIST}}
     </section>
 
