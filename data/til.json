@@ -5,6 +5,12 @@
       "title": "ESM Modules in Node.js",
       "content": "This project uses ES modules with 'type': 'module' in package.json, enabling import/export syntax natively in Node.js without transpilation.",
       "category": "nodejs"
+    },
+    {
+      "date": "2026-03-27",
+      "title": "ESM Import/Export Syntax",
+      "content": "The codebase uses native ES module import/export syntax throughout, enabled by \"type\": \"module\" in package.json. This avoids CommonJS require() and allows top-level await.",
+      "category": "nodejs"
     }
   ]
 }

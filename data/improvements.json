@@ -10,14 +10,548 @@
         "src/generators/build.js"
       ],
       "impact": "Foundation for daily auto-improvement system"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "update data files from local session state",
+      "files_changed": [
+        "data/structural-scores.json",
+        "data/usage-log.json"
+      ],
+      "impact": "Auto-logged from commit d1eceb5"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "Merge claude/check-cron-job-o51Jj into main",
+      "files_changed": [],
+      "impact": "Auto-logged from commit 32fc1f0"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "Merge claude/test-cloud-environment-5ar8t into main",
+      "files_changed": [],
+      "impact": "Auto-logged from commit d898aa1"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "add centralized cron management system",
+      "files_changed": [
+        ".github/workflows/daily-cron.yml",
+        ".github/workflows/structural-eval.yml"
+      ],
+      "impact": "Auto-logged from commit 9dfa6ef"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "ci: deploy only from main branch (prevent claude/* branches from overwriting Pages)",
+      "files_changed": [
+        ".github/workflows/deploy.yml"
+      ],
+      "impact": "Auto-logged from commit a8dac38"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "update usage-log from session tests",
+      "files_changed": [
+        "data/usage-log.json"
+      ],
+      "impact": "Auto-logged from commit cc1dae1"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "apply Stitch design to landing.html + daily.html",
+      "files_changed": [
+        "src/templates/daily.html",
+        "src/templates/landing.html"
+      ],
+      "impact": "Auto-logged from commit 099033b"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "update usage-log from session start tests",
+      "files_changed": [
+        "data/usage-log.json"
+      ],
+      "impact": "Auto-logged from commit 79974ac"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "apply Stitch design system — full visual overhaul",
+      "files_changed": [
+        "src/generators/build.js",
+        "src/templates/index.html"
+      ],
+      "impact": "Auto-logged from commit 72b9b2b"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "apply Stitch design system to index.html",
+      "files_changed": [
+        "src/templates/index.html"
+      ],
+      "impact": "Auto-logged from commit 73bc955"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "Stitch design integration + Remotion video project",
+      "files_changed": [
+        "DESIGN.md",
+        "src/templates/daily.html",
+        "src/templates/index.html",
+        "src/templates/landing.html",
+        "video/package.json",
+        "video/remotion.config.ts",
+        "video/src/Composition.tsx",
+        "video/src/Root.tsx",
+        "video/src/ds.ts",
+        "video/src/scenes/DailyAutomation.tsx",
+        "video/src/scenes/DashboardTour.tsx",
+        "video/src/scenes/Intro.tsx",
+        "video/src/scenes/Outro.tsx",
+        "video/src/scenes/PricingRouting.tsx",
+        "video/src/scenes/VideoLLMModels.tsx",
+        "video/tsconfig.json"
+      ],
+      "impact": "Auto-logged from commit 24dd713"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "eval: structural snapshot 2026-03-26",
+      "files_changed": [
+        "data/evaluation-scores.json"
+      ],
+      "impact": "Auto-logged from commit e9ae37d"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "enhance evaluation harness to 100/100 + structural code verification + 100% test coverage",
+      "files_changed": [
+        ".github/workflows/deploy.yml",
+        ".github/workflows/structural-eval.yml",
+        "STRUCTURAL-RUBRIC.md",
+        "data/evaluation-scores.json",
+        "data/structural-scores.json",
+        "data/usage-log.json",
+        "package.json",
+        "scripts/evaluate-rules.js",
+        "scripts/evaluate-structural.js",
+        "src/generators/build.js",
+        "src/templates/landing.html",
+        "src/video-llm/index.js",
+        "tests/data-schema.test.js",
+        "tests/server/middleware/auth.test.js",
+        "tests/server/middleware/cors.test.js",
+        "tests/server/middleware/logger.test.js",
+        "tests/server/middleware/rate-limit.test.js",
+        "tests/server/router.test.js",
+        "tests/server/utils/api-keys.test.js",
+        "tests/server/utils/response.test.js",
+        "tests/server/utils/usage-tracker.test.js",
+        "tests/server/utils/validation.test.js",
+        "tests/video-llm/adapters-impl.test.js",
+        "tests/video-llm/config.test.js",
+        "tests/video-llm/index.test.js"
+      ],
+      "impact": "Auto-logged from commit 1382e9c"
+    },
+    {
+      "date": "2026-03-27",
+      "type": "feature",
+      "description": "인디 SaaS 크론 + 디자인 검증 하네스 + overflow 수정 (#2)",
+      "files_changed": [
+        ".claude/agents/design-reviewer.md",
+        ".claude/hooks/session-start.sh",
+        ".claude/settings.json",
+        "CLAUDE.md",
+        "data/i18n.json",
+        "package.json",
+        "scripts/validate-design.js",
+        "src/generators/build.js",
+        "src/templates/daily.html",
+        "src/templates/index.html"
+      ],
+      "impact": "Auto-logged from commit 37a2e99"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "main 머지 충돌 해결 + SaaS 모듈 통합",
+      "files_changed": [],
+      "impact": "Auto-logged from commit d569f53"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "update usage-log from test session",
+      "files_changed": [
+        "data/usage-log.json"
+      ],
+      "impact": "Auto-logged from commit 9f34fef"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "Grid item min-width:auto 함정 수정 + 하네스 학습",
+      "files_changed": [
+        ".claude/agents/design-reviewer.md",
+        "scripts/validate-design.js",
+        "src/templates/index.html"
+      ],
+      "impact": "Auto-logged from commit c6d3da5"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "validate:design 휴리스틱 패턴 검증으로 전면 개편",
+      "files_changed": [
+        ".claude/agents/design-reviewer.md",
+        "scripts/validate-design.js",
+        "src/templates/daily.html",
+        "src/templates/index.html"
+      ],
+      "impact": "Auto-logged from commit bb8a17c"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "update usage-log from test runs",
+      "files_changed": [
+        "data/usage-log.json"
+      ],
+      "impact": "Auto-logged from commit 3de2382"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "add deployment plan by user count (Phase 0-5)",
+      "files_changed": [
+        "data/video-llm-cost-plan.json"
+      ],
+      "impact": "Auto-logged from commit cb0b7a3"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "update usage-log with test run records",
+      "files_changed": [
+        "data/usage-log.json"
+      ],
+      "impact": "Auto-logged from commit 5116bdf"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "Merge branch 'claude/video-llm-research-WhTXT' into main",
+      "files_changed": [],
+      "impact": "Auto-logged from commit 34c4bdd"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "validate:design 강화: CSS 존재 여부 → 실제 콘텐츠 길이 기반 overflow 검증",
+      "files_changed": [
+        "scripts/validate-design.js"
+      ],
+      "impact": "Auto-logged from commit f4083f0"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "complete Video LLM SaaS API proxy with self-evolution system",
+      "files_changed": [
+        ".claude/triggers.json",
+        "CLAUDE.md",
+        "RULES.md",
+        "data/api-keys.json",
+        "data/evaluation-scores.json",
+        "data/usage-log.json",
+        "package.json",
+        "scripts/daily-update.js",
+        "scripts/evaluate-rules.js",
+        "scripts/lint.js",
+        "src/client/index.js",
+        "src/client/types.js",
+        "src/server/index.js",
+        "src/server/middleware/auth.js",
+        "src/server/middleware/cors.js",
+        "src/server/middleware/logger.js",
+        "src/server/middleware/rate-limit.js",
+        "src/server/router.js",
+        "src/server/routes/analyze.js",
+        "src/server/routes/costs.js",
+        "src/server/routes/generate.js",
+        "src/server/routes/health.js",
+        "src/server/routes/models.js",
+        "src/server/routes/usage.js",
+        "src/server/utils/api-keys.js",
+        "src/server/utils/response.js",
+        "src/server/utils/usage-tracker.js",
+        "src/server/utils/validation.js",
+        "tests/client/sdk.test.js",
+        "tests/server/integration.test.js",
+        "tests/video-llm/adapters.test.js",
+        "tests/video-llm/router.test.js"
+      ],
+      "impact": "Auto-logged from commit 47e6a79"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "빌드 시 디자인 검증 자동 실행 + SessionStart hook 연동",
+      "files_changed": [
+        ".claude/hooks/session-start.sh",
+        ".claude/settings.json",
+        "package.json"
+      ],
+      "impact": "Auto-logged from commit 59d1de7"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "GitHub Trending overflow 수정 + 디자인 검증 하네스 추가",
+      "files_changed": [
+        ".claude/agents/design-reviewer.md",
+        "CLAUDE.md",
+        "package.json",
+        "scripts/validate-design.js",
+        "src/templates/daily.html",
+        "src/templates/index.html"
+      ],
+      "impact": "Auto-logged from commit 03e678a"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "add Video LLM SaaS cost analysis and scaling plan",
+      "files_changed": [
+        "data/video-llm-cost-plan.json"
+      ],
+      "impact": "Auto-logged from commit c4a3071"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "docs: enrich video LLM research with market data and additional models",
+      "files_changed": [
+        "data/video-llm-research.json"
+      ],
+      "impact": "Auto-logged from commit c5dfe58"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "add Video LLM research & SaaS unified API router",
+      "files_changed": [
+        "data/i18n.json",
+        "data/video-llm-research.json",
+        "src/generators/build.js",
+        "src/templates/index.html",
+        "src/video-llm/adapters/base.js",
+        "src/video-llm/adapters/gemini.js",
+        "src/video-llm/adapters/kling.js",
+        "src/video-llm/adapters/veo.js",
+        "src/video-llm/config.js",
+        "src/video-llm/index.js",
+        "src/video-llm/router.js",
+        "tests/build.test.js"
+      ],
+      "impact": "Auto-logged from commit fd42f44"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "Merge pull request #1 from mqzkim/claude/test-cloud-environment-5ar8t",
+      "files_changed": [],
+      "impact": "Auto-logged from commit 66b7d4a"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "인디 SaaS 제품 수집 크론 모듈 추가",
+      "files_changed": [
+        "CLAUDE.md",
+        "data/i18n.json",
+        "data/saas.json",
+        "scripts/daily-update.js",
+        "scripts/fetch-saas.js",
+        "src/generators/build.js",
+        "src/templates/daily.html",
+        "src/templates/index.html",
+        "tests/build.test.js"
+      ],
+      "impact": "Auto-logged from commit 0e70920"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "CLAUDE.md 점검: 누락 파일 추가 및 no-op lint 제거",
+      "files_changed": [
+        "CLAUDE.md",
+        "package.json"
+      ],
+      "impact": "Auto-logged from commit 7ac5bc2"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "Merge branch 'claude/cloud-service-cron-jobs-ZyGPW'",
+      "files_changed": [],
+      "impact": "Auto-logged from commit 1303ff0"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "bugfix",
+      "description": "add Pages deploy to daily-cron workflow",
+      "files_changed": [
+        ".github/workflows/daily-cron.yml"
+      ],
+      "impact": "Auto-logged from commit 635bbff"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "daily: 2026-03-26 — quote by Fred Brooks",
+      "files_changed": [
+        "data/trending.json"
+      ],
+      "impact": "Auto-logged from commit 68238e9"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "full i18n with browser language-based localization",
+      "files_changed": [
+        "data/i18n.json",
+        "src/generators/build.js",
+        "src/templates/daily.html",
+        "src/templates/index.html",
+        "tests/build.test.js"
+      ],
+      "impact": "Auto-logged from commit 044ac49"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "daily archive pages with per-day detail view",
+      "files_changed": [
+        "src/generators/build.js",
+        "src/templates/daily.html",
+        "src/templates/index.html"
+      ],
+      "impact": "Auto-logged from commit 94e75e9"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "ensure daily data accumulates in git and Pages",
+      "files_changed": [
+        ".claude/triggers.json",
+        ".github/workflows/daily-cron.yml",
+        "CLAUDE.md"
+      ],
+      "impact": "Auto-logged from commit 0707092"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "add 5 daily features - quotes, TIL, trending, improvements, APIs",
+      "files_changed": [
+        "data/api-data.json",
+        "data/daily-quote.json",
+        "data/improvements.json",
+        "data/quotes.json",
+        "data/til.json",
+        "data/trending.json",
+        "scripts/daily-update.js",
+        "scripts/fetch-apis.js",
+        "scripts/fetch-trending.js",
+        "scripts/generate-til.js",
+        "scripts/log-improvement.js",
+        "scripts/select-quote.js",
+        "src/generators/build.js",
+        "src/templates/index.html",
+        "tests/build.test.js"
+      ],
+      "impact": "Auto-logged from commit 530f3dc"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "apply AI-Native UI theme (#3 trending)",
+      "files_changed": [
+        "src/templates/index.html"
+      ],
+      "impact": "Auto-logged from commit 6eb2871"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "trigger GitHub Pages deploy",
+      "files_changed": [],
+      "impact": "Auto-logged from commit a260f25"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "add package-lock.json",
+      "files_changed": [
+        "package-lock.json"
+      ],
+      "impact": "Auto-logged from commit e57220e"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "add SessionStart hook for cloud bootstrap",
+      "files_changed": [
+        ".claude/hooks/session-start.sh",
+        ".claude/settings.json"
+      ],
+      "impact": "Auto-logged from commit 6a29120"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "Build in Public dashboard with real repo stats",
+      "files_changed": [
+        "data/daily-log.json",
+        "data/metrics.json",
+        "data/snapshots.json",
+        "scripts/collect-stats.js",
+        "scripts/daily-update.js",
+        "src/generators/build.js",
+        "src/templates/index.html",
+        "tests/build.test.js"
+      ],
+      "impact": "Auto-logged from commit 3344765"
+    },
+    {
+      "date": "2026-03-26",
+      "type": "feature",
+      "description": "cloud-native daily service with Claude Code cron jobs",
+      "files_changed": [],
+      "impact": "Auto-logged from commit 66172b6"
     }
   ],
   "stats": {
-    "total_improvements": 1,
+    "total_improvements": 46,
     "by_type": {
-      "feature": 0,
+      "feature": 44,
       "refactor": 0,
-      "bugfix": 0,
+      "bugfix": 1,
       "performance": 0,
       "initial": 1
     }

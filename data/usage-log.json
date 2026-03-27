@@ -233,6 +233,78 @@
       "status": "success",
       "durationMs": 1,
       "timestamp": "2026-03-26T16:31:21.535Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-27T09:19:11.941Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-27T09:19:11.943Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-27T09:19:12.027Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-27T09:19:12.039Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-27T09:19:13.075Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-27T09:19:13.083Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-27T09:19:13.149Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-27T09:19:13.162Z"
     }
   ]
 }

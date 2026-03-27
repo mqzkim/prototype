@@ -1,12 +1,18 @@
 {
-  "last_fetched": "2026-03-26",
+  "last_fetched": "2026-03-27",
   "exchange": {
     "history": [
       {
         "date": "2026-03-26",
-        "usd_krw": 1350.00,
-        "usd_jpy": 150.00,
+        "usd_krw": 1350,
+        "usd_jpy": 150,
         "usd_eur": 0.92
+      },
+      {
+        "date": "2026-03-27",
+        "usd_krw": 1506.82883,
+        "usd_jpy": 159.619901,
+        "usd_eur": 0.866132
       }
     ]
   },
@@ -17,6 +23,12 @@
         "city": "Seoul",
         "temp_c": null,
         "condition": "pending first fetch"
+      },
+      {
+        "date": "2026-03-27",
+        "city": "Seoul",
+        "temp_c": 16,
+        "condition": "Sunny"
       }
     ]
   }
