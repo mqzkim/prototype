@@ -5,183 +5,439 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{DATE}} - Build in Public</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #050508; --surface: #0c0c14; --card: rgba(14,14,24,0.7);
-      --border: rgba(255,255,255,0.06); --text: #e2e4ec; --muted: #5a5b72;
-      --violet: #8b5cf6; --cyan: #06b6d4; --emerald: #10b981;
-      --rose: #f43f5e; --amber: #f59e0b;
-      --glow-violet: rgba(139,92,246,0.4); --glow-cyan: rgba(6,182,212,0.4);
-      --gradient-main: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      --bg: #fcf8fe;
+      --surface: #ffffff;
+      --surface-low: #f6f2f8;
+      --surface-container: #f0edf3;
+      --surface-high: #eae7ed;
+      --primary: #006c49;
+      --primary-container: #10b981;
+      --secondary: #00687a;
+      --tertiary: #6d3bd7;
+      --text: #1b1b1f;
+      --muted: rgba(27,27,31,0.45);
+      --muted-solid: #8a8a94;
+      --error: #ba1a1a;
+      --amber: #b45309;
+      --radius: 1rem;
+      --radius-lg: 1.5rem;
+      --radius-full: 9999px;
+      --shadow: 0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --gradient: linear-gradient(135deg, #006c49, #10b981);
+      --nav-h: 4.25rem;
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
       font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--bg); color: var(--text);
-      min-height: 100vh; line-height: 1.6; overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
-    body::before {
-      content:''; position:fixed; top:-40%; left:-20%; width:60%; height:80%;
-      background: radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, transparent 70%);
-      pointer-events:none; z-index:0;
-    }
-    .page { max-width:800px; margin:0 auto; padding:2rem 1.5rem; position:relative; z-index:1; }
 
-    /* Nav */
-    .nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; }
-    .nav a {
-      color: var(--cyan); text-decoration:none; font-size:0.85rem;
-      font-family:'JetBrains Mono',monospace;
-      transition: color 0.2s;
+    /* ── Fixed frosted-glass nav ── */
+    .topnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: rgba(252,248,254,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(27,27,31,0.07);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
     }
-    .nav a:hover { color: var(--violet); }
-    .nav-arrows { display:flex; gap:1rem; }
 
-    /* Header */
-    .day-header { margin-bottom:2rem; }
+    .topnav-home {
+      text-decoration: none;
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: opacity 0.15s;
+    }
+    .topnav-home:hover { opacity: 0.7; }
+
+    .topnav-arrows {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    /* NAV_PREV / NAV_NEXT rendered as <a> tags — style them as pill buttons */
+    .topnav-arrows a {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      background: var(--surface-container);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .topnav-arrows a:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* ── Page wrapper ── */
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: calc(var(--nav-h) + 2rem) 1.5rem 3rem;
+    }
+
+    /* ── Date header ── */
+    .day-header { margin-bottom: 2.25rem; }
+
     .day-date {
-      font-size:2.2rem; font-weight:800;
-      background: var(--gradient-main);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      letter-spacing: -0.02em;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .day-meta { display:flex; align-items:center; gap:0.6rem; margin-top:0.4rem; }
-    .day-version {
-      font-family:'JetBrains Mono',monospace; font-size:0.75rem;
-      color:var(--muted);
+
+    .day-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.6rem;
     }
+
     .day-version-badge {
-      display:inline-block; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
-      padding:0.15rem 0.55rem; border-radius:8px;
-      background:rgba(139,92,246,0.1); color:var(--violet);
-      border:1px solid rgba(139,92,246,0.2);
+      display: inline-flex;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      color: #fff;
+      letter-spacing: 0.03em;
     }
 
-    /* Glow card */
-    .glow-card {
-      background:var(--card); border:1px solid var(--border);
-      border-radius:16px; backdrop-filter:blur(12px); position:relative;
-      transition: transform 0.2s ease-out, border-color 0.2s ease-out;
-    }
-    .glow-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(139, 92, 246, 0.2);
-    }
-    .glow-card::before {
-      content:''; position:absolute; inset:-1px; border-radius:17px; padding:1px;
-      background:linear-gradient(135deg, rgba(139,92,246,0.15), transparent 40%, transparent 60%, rgba(6,182,212,0.15));
-      -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+    /* ── Section cards ── */
+    .section { margin-bottom: 1.1rem; }
+
+    .section-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 1.4rem 1.5rem;
+      border: 1px solid rgba(27,27,31,0.06);
     }
 
-    .section { margin-bottom:1.2rem; }
-    .section-card { padding:1.3rem 1.4rem; }
     .section-title {
-      font-size:0.72rem; font-weight:600; text-transform:uppercase;
-      letter-spacing:0.06em; color:var(--muted); margin-bottom:0.8rem;
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--primary);
+      margin-bottom: 0.9rem;
     }
 
-    /* Quote */
-    .quote-text { font-size:1.1rem; font-style:italic; color:var(--text); line-height:1.5; margin-bottom:0.5rem; }
-    .quote-author { font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--violet); font-style:normal; }
+    /* ── Quote ── */
+    .quote-text {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 0.55rem;
+    }
+    .quote-author {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--primary);
+      font-style: normal;
+    }
 
-    /* TIL */
+    /* ── TIL ── */
     .til-badge {
-      display:inline-block; font-size:0.65rem; font-family:'JetBrains Mono',monospace;
-      padding:0.15rem 0.5rem; border-radius:6px;
-      background:rgba(139,92,246,0.12); color:var(--violet);
-      border:1px solid rgba(139,92,246,0.2); margin-bottom:0.5rem; text-transform:uppercase;
+      display: inline-block;
+      font-size: 0.62rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      padding: 0.18rem 0.55rem;
+      border-radius: var(--radius-full);
+      background: rgba(0,108,73,0.1);
+      color: var(--primary);
+      border: 1px solid rgba(0,108,73,0.2);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
-    .til-title { font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:0.4rem; }
-    .til-content { font-size:0.85rem; color:var(--muted); line-height:1.6; }
+    .til-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .til-content {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .til-date {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
 
-    /* Stats grid — 3-col for daily focus (commits / lines / files) */
-    .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.8rem; }
-    @media (max-width:640px) { .stats-grid { grid-template-columns:repeat(2,1fr); } }
-    .stat-item { text-align:center; }
+    /* ── Stats bento — 3-col ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    @media (max-width: 540px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .stat-item {
+      text-align: center;
+      background: var(--surface-low);
+      border-radius: var(--radius);
+      padding: 0.9rem 0.5rem;
+    }
     .stat-num {
-      font-size:1.8rem; font-weight:800; font-family:'JetBrains Mono',monospace;
-      color:var(--cyan); text-shadow:0 0 16px var(--glow-cyan);
+      display: block;
+      font-size: 1.75rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--primary);
+      line-height: 1.1;
     }
-    .stat-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+    .stat-label {
+      display: block;
+      font-size: 0.67rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 0.25rem;
+    }
 
-    /* Trending */
+    /* ── API row ── */
+    .api-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .api-item { text-align: center; }
+    .api-label {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+    }
+    .api-value {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--secondary);
+    }
+    .api-sub {
+      display: block;
+      font-size: 0.67rem;
+      color: var(--muted);
+    }
+
+    /* ── Trending ── */
     .trending-item {
-      display:flex; align-items:center; gap:0.6rem;
-      padding:0.5rem 0; border-bottom:1px solid var(--border);
-      max-width:100%; overflow:hidden;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid rgba(27,27,31,0.06);
+      max-width: 100%;
+      overflow: hidden;
     }
-    .trending-item:last-child { border-bottom:none; }
+    .trending-item:last-child { border-bottom: none; }
+
     .trending-rank {
-      font-family:'JetBrains Mono',monospace; font-size:0.7rem;
-      color:var(--cyan); font-weight:700; min-width:24px; flex-shrink:0;
-      text-shadow:0 0 8px var(--glow-cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 22px;
+      flex-shrink: 0;
     }
-    .trending-info { flex:1; min-width:0; overflow:hidden; }
-    .trending-name { font-size:0.85rem; font-weight:600; color:var(--text); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .trending-desc { font-size:0.72rem; color:var(--muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .trending-meta { display:flex; gap:0.5rem; align-items:center; flex-shrink:0; max-width:120px; }
-    .trending-lang { font-size:0.65rem; font-family:'JetBrains Mono',monospace; color:var(--violet); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70px; }
-    .trending-stars { font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--amber); white-space:nowrap; }
-
-    /* API */
-    .api-row { display:flex; gap:1.5rem; flex-wrap:wrap; }
-    .api-item { text-align:center; }
-    .api-label { font-size:0.65rem; font-family:'JetBrains Mono',monospace; color:var(--muted); text-transform:uppercase; }
-    .api-value { font-size:1.3rem; font-weight:700; font-family:'JetBrains Mono',monospace; color:var(--cyan); text-shadow:0 0 10px var(--glow-cyan); }
-    .api-sub { font-size:0.68rem; color:var(--muted); }
-
-    /* Changes */
-    .changes-list { list-style:none; }
-    .changes-list li { padding:0.2rem 0; font-size:0.88rem; }
-    .changes-list li::before {
-      content:">"; color:var(--cyan); margin-right:0.6rem;
-      font-weight:700; font-family:'JetBrains Mono',monospace;
-      text-shadow:0 0 6px var(--glow-cyan);
+    .trending-info {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .trending-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .trending-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .trending-meta {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-shrink: 0;
+      max-width: 120px;
+    }
+    .trending-lang {
+      font-size: 0.64rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--tertiary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70px;
+    }
+    .trending-stars {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--amber);
+      white-space: nowrap;
     }
 
-    /* SaaS */
+    /* ── Indie SaaS ── */
     .saas-item {
-      display:flex; align-items:center; gap:0.6rem;
-      padding:0.5rem 0; border-bottom:1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid rgba(27,27,31,0.06);
     }
-    .saas-item:last-child { border-bottom:none; }
+    .saas-item:last-child { border-bottom: none; }
+
     .saas-rank {
-      font-family:'JetBrains Mono',monospace; font-size:0.7rem;
-      color:var(--rose); font-weight:700; min-width:24px;
-      text-shadow:0 0 8px rgba(244,63,94,0.4);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--error);
+      min-width: 22px;
+      flex-shrink: 0;
     }
-    .saas-info { flex:1; min-width:0; overflow:hidden; }
-    .saas-name { font-size:0.85rem; font-weight:600; color:var(--text); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .saas-tagline { font-size:0.72rem; color:var(--muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .saas-votes { font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--rose); }
-
-    .muted-text { font-size:0.82rem; color:var(--muted); font-style:italic; }
-
-    /* Shimmer */
-    @keyframes shimmer { 0% { background-position:-200% 0; } 100% { background-position:200% 0; } }
-    .shimmer-line {
-      height:1px; margin:1.5rem auto; max-width:200px;
-      background:linear-gradient(90deg, transparent, rgba(139,92,246,0.4), rgba(6,182,212,0.4), transparent);
-      background-size:200% 100%; animation:shimmer 3s linear infinite;
+    .saas-info {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .saas-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .saas-tagline {
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .saas-votes {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--error);
+      flex-shrink: 0;
     }
 
-    footer { text-align:center; margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border); }
-    .footer-text { font-size:0.78rem; color:var(--muted); }
-    .footer-highlight { background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-weight:700; }
+    /* ── Changes ── */
+    .changes-list { list-style: none; }
+    .changes-list li {
+      padding: 0.22rem 0;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+    .changes-list li::before {
+      content: "›";
+      color: var(--primary);
+      margin-right: 0.55rem;
+      font-weight: 700;
+    }
+
+    .muted-text {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,108,73,0.2), transparent);
+      margin: 1.75rem 0;
+      border: none;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(27,27,31,0.07);
+    }
+    .footer-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .footer-text a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .footer-text a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <div class="page">
-    <nav class="nav">
-      <a href="../index.html">{{t.home}}</a>
-      <div class="nav-arrows">
-        {{NAV_PREV}}
-        {{NAV_NEXT}}
-      </div>
-    </nav>
 
+  <!-- Fixed frosted-glass top nav -->
+  <nav class="topnav">
+    <a href="../index.html" class="topnav-home">← {{t.home}}</a>
+    <div class="topnav-arrows">
+      {{NAV_PREV}}
+      {{NAV_NEXT}}
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- Date header -->
     <div class="day-header">
       <div class="day-date">{{DATE}}</div>
       <div class="day-meta">
@@ -189,43 +445,43 @@
       </div>
     </div>
 
-    <div class="shimmer-line"></div>
+    <hr class="divider">
 
-    <!-- Quote -->
+    <!-- Quote of the Day -->
     <div class="section">
-      <div class="section-card glow-card">
+      <div class="section-card">
         <div class="section-title">{{t.quoteOfTheDay}}</div>
         {{QUOTE_HTML}}
       </div>
     </div>
 
-    <!-- TIL -->
+    <!-- Today I Learned -->
     <div class="section">
-      <div class="section-card glow-card">
+      <div class="section-card">
         <div class="section-title">{{t.todayILearned}}</div>
         {{TIL_HTML}}
       </div>
     </div>
 
-    <!-- Repo Stats -->
+    <!-- Repo Snapshot -->
     <div class="section">
-      <div class="section-card glow-card">
+      <div class="section-card">
         <div class="section-title">{{t.repoSnapshot}}</div>
         {{STATS_HTML}}
       </div>
     </div>
 
-    <!-- API Data -->
+    <!-- Live Data -->
     <div class="section">
-      <div class="section-card glow-card">
+      <div class="section-card">
         <div class="section-title">{{t.liveData}}</div>
         {{API_HTML}}
       </div>
     </div>
 
-    <!-- Trending -->
+    <!-- GitHub Trending -->
     <div class="section">
-      <div class="section-card glow-card">
+      <div class="section-card">
         <div class="section-title">{{t.githubTrending}}</div>
         {{TRENDING_HTML}}
       </div>
@@ -233,7 +489,7 @@
 
     <!-- Indie SaaS -->
     <div class="section">
-      <div class="section-card glow-card">
+      <div class="section-card">
         <div class="section-title">{{t.indieSaaS}}</div>
         {{SAAS_HTML}}
       </div>
@@ -241,15 +497,16 @@
 
     <!-- Changes -->
     <div class="section">
-      <div class="section-card glow-card">
+      <div class="section-card">
         <div class="section-title">{{t.changes}}</div>
         {{CHANGES_HTML}}
       </div>
     </div>
 
     <footer>
-      <p class="footer-text">{{t.partOf}} <a href="../index.html" style="color:var(--cyan);text-decoration:none;">{{t.title}}</a></p>
+      <p class="footer-text">{{t.partOf}} <a href="../index.html">{{t.title}}</a></p>
     </footer>
+
   </div>
 </body>
 </html>
