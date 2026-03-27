@@ -338,24 +338,24 @@ function buildDailySaaSHtml(saas, date, t) {
 
 function buildMainPage(template, locale, t, data) {
   let html = template
-    .replace('{{SERVICE_HEALTH}}', data.metrics.service_health)
-    .replace('{{DAYS_ACTIVE}}', String(data.metrics.total_days_active))
-    .replace('{{TOTAL_COMMITS}}', String(data.metrics.total_commits))
-    .replace('{{TOTAL_LINES}}', String(data.metrics.total_lines))
-    .replace('{{TOTAL_FILES}}', String(data.metrics.total_files))
-    .replace('{{STREAK}}', String(data.metrics.streak))
-    .replace('{{LOC_BARS}}', buildLocBars(data.snapshots?.snapshots))
-    .replace('{{QUOTE_SECTION}}', buildQuoteSection(data.dailyQuote))
-    .replace('{{TIL_SECTION}}', buildTILSection(data.til))
-    .replace('{{TRENDING_SECTION}}', buildTrendingSection(data.trending))
-    .replace('{{IMPROVEMENTS_SECTION}}', buildImprovementsSection(data.improvements))
-    .replace('{{API_SECTION}}', buildAPISection(data.apiData))
-    .replace('{{VIDEO_LLM_SECTION}}', buildVideoLLMSection(data.videoLLM, t))
-    .replace('{{SAAS_SECTION}}', buildSaaSSection(data.saas))
-    .replace('{{ARCHIVE_LIST}}', buildArchiveList(data.dailyLog.entries))
-    .replace('{{TIMELINE_ENTRIES}}', buildTimeline(data.dailyLog.entries))
-    .replace('{{LAST_UPDATED}}', data.metrics.last_updated)
-    .replace('{{LANG_SWITCHER}}', buildLangSwitcher(locale, data.locales));
+    .replaceAll('{{SERVICE_HEALTH}}', data.metrics.service_health)
+    .replaceAll('{{DAYS_ACTIVE}}', String(data.metrics.total_days_active))
+    .replaceAll('{{TOTAL_COMMITS}}', String(data.metrics.total_commits))
+    .replaceAll('{{TOTAL_LINES}}', String(data.metrics.total_lines))
+    .replaceAll('{{TOTAL_FILES}}', String(data.metrics.total_files))
+    .replaceAll('{{STREAK}}', String(data.metrics.streak))
+    .replaceAll('{{LOC_BARS}}', buildLocBars(data.snapshots?.snapshots))
+    .replaceAll('{{QUOTE_SECTION}}', buildQuoteSection(data.dailyQuote))
+    .replaceAll('{{TIL_SECTION}}', buildTILSection(data.til))
+    .replaceAll('{{TRENDING_SECTION}}', buildTrendingSection(data.trending))
+    .replaceAll('{{IMPROVEMENTS_SECTION}}', buildImprovementsSection(data.improvements))
+    .replaceAll('{{API_SECTION}}', buildAPISection(data.apiData))
+    .replaceAll('{{VIDEO_LLM_SECTION}}', buildVideoLLMSection(data.videoLLM, t))
+    .replaceAll('{{SAAS_SECTION}}', buildSaaSSection(data.saas))
+    .replaceAll('{{ARCHIVE_LIST}}', buildArchiveList(data.dailyLog.entries))
+    .replaceAll('{{TIMELINE_ENTRIES}}', buildTimeline(data.dailyLog.entries))
+    .replaceAll('{{LAST_UPDATED}}', data.metrics.last_updated)
+    .replaceAll('{{LANG_SWITCHER}}', buildLangSwitcher(locale, data.locales));
   return applyTranslations(html, t);
 }
 
