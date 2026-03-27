@@ -13,7 +13,59 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      decision: ${{ steps.check.outputs.decision }}
+    steps:
+      - name: Check central cron rules
+        id: check
+        env:
+          JOB_ID: prototype/structural-eval
+          RULES_URL: https://raw.githubusercontent.com/mqzkim/code-harness/main/cron-config/rules.json
+        run: |
+          curl -sf "$RULES_URL" -o /tmp/cron-rules.json 2>/dev/null || echo '{}' > /tmp/cron-rules.json
+
+          cat > /tmp/cron-gate.mjs << 'EOF'
+          import { readFileSync } from 'fs';
+
+          const jobId = process.env.JOB_ID;
+          let rules = {};
+          try { rules = JSON.parse(readFileSync('/tmp/cron-rules.json', 'utf8')); } catch {}
+
+          const job = (rules.jobs || {})[jobId];
+          if (!job) { console.log('run'); process.exit(0); }
+
+          if (job.enabled === false) { console.log('skip:disabled'); process.exit(0); }
+          if (job.paused)            { console.log(`skip:paused — ${job.pauseReason || 'no reason'}`); process.exit(0); }
+
+          const r = job.rules || {};
+          const d = rules.defaults || {};
+          const today = new Date().toISOString().slice(0, 10);
+          const dow   = new Date().getUTCDay();
+
+          if (r.activeFrom  && today < r.activeFrom)  { console.log(`skip:not-yet — starts ${r.activeFrom}`); process.exit(0); }
+          if (r.activeUntil && today > r.activeUntil) { console.log(`skip:expired — ended ${r.activeUntil}`); process.exit(0); }
+          if ((r.skipDates || []).includes(today))    { console.log(`skip:date — ${today} in skipDates`); process.exit(0); }
+
+          const skipWeekend = r.skipOnWeekend !== undefined ? r.skipOnWeekend : d.skipOnWeekend;
+          if (skipWeekend && (dow === 0 || dow === 6)) { console.log(`skip:weekend — dow=${dow}`); process.exit(0); }
+
+          if (Array.isArray(r.onlyOnDays) && r.onlyOnDays.length && !r.onlyOnDays.includes(dow)) {
+            console.log(`skip:wrong-day — today=${dow}, allowed=${JSON.stringify(r.onlyOnDays)}`);
+            process.exit(0);
+          }
+
+          console.log('run');
+          EOF
+
+          DECISION=$(node /tmp/cron-gate.mjs 2>/dev/null || echo "run")
+          echo "decision=$DECISION" >> $GITHUB_OUTPUT
+          echo "Cron gate: $DECISION"
+
   evaluate:
+    needs: gate
+    if: startsWith(needs.gate.outputs.decision, 'run')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
