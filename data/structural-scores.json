@@ -1,5 +1,144 @@
 {
   "rubricVersion": "1.0.0",
   "maxScore": 100,
-  "evaluations": []
+  "evaluations": [
+    {
+      "date": "2026-03-26",
+      "autoScore": 17,
+      "autoMax": 29,
+      "claudeMax": 71,
+      "scores": {
+        "SC-01": {
+          "score": null,
+          "max": 8,
+          "type": "claude",
+          "needsEval": true
+        },
+        "SC-02": {
+          "score": null,
+          "max": 8,
+          "type": "claude",
+          "needsEval": true
+        },
+        "SC-03": {
+          "score": 0,
+          "max": 5,
+          "type": "auto",
+          "measurement": {
+            "maxDepth": 7,
+            "violations": 23
+          }
+        },
+        "SC-04": {
+          "score": null,
+          "max": 4,
+          "type": "claude",
+          "needsEval": true
+        },
+        "SM-01": {
+          "score": 7,
+          "max": 7,
+          "type": "auto",
+          "measurement": {
+            "cycles": 0
+          }
+        },
+        "SM-02": {
+          "score": null,
+          "max": 6,
+          "type": "claude",
+          "needsEval": true
+        },
+        "SM-03": {
+          "score": 0,
+          "max": 6,
+          "type": "auto",
+          "measurement": {
+            "violations": 20
+          }
+        },
+        "SM-04": {
+          "score": null,
+          "max": 6,
+          "type": "claude",
+          "needsEval": true
+        },
+        "BR-01": {
+          "score": 6,
+          "max": 6,
+          "type": "auto",
+          "measurement": {
+            "total": 28,
+            "handled": 28,
+            "ratio": 1
+          }
+        },
+        "BR-02": {
+          "score": null,
+          "max": 5,
+          "type": "claude",
+          "needsEval": true
+        },
+        "BR-03": {
+          "score": 4,
+          "max": 5,
+          "type": "auto",
+          "measurement": {
+            "letCount": 133,
+            "constCount": 960,
+            "ratio": 0.122
+          }
+        },
+        "BR-04": {
+          "score": null,
+          "max": 4,
+          "type": "claude",
+          "needsEval": true
+        },
+        "AD-01": {
+          "score": null,
+          "max": 5,
+          "type": "claude",
+          "needsEval": true
+        },
+        "AD-02": {
+          "score": null,
+          "max": 5,
+          "type": "claude",
+          "needsEval": true
+        },
+        "AD-03": {
+          "score": null,
+          "max": 5,
+          "type": "claude",
+          "needsEval": true
+        },
+        "EF-01": {
+          "score": null,
+          "max": 5,
+          "type": "claude",
+          "needsEval": true
+        },
+        "EF-02": {
+          "score": null,
+          "max": 5,
+          "type": "claude",
+          "needsEval": true
+        },
+        "EF-03": {
+          "score": null,
+          "max": 5,
+          "type": "claude",
+          "needsEval": true
+        }
+      },
+      "scan": {
+        "fileCount": 50,
+        "runtime": "node",
+        "cycles": 0,
+        "maxNesting": 7,
+        "mutabilityRatio": 0.122
+      }
+    }
+  ]
 }
