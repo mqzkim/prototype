@@ -197,6 +197,42 @@
       "status": "success",
       "durationMs": 1,
       "timestamp": "2026-03-26T16:23:58.498Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 1,
+      "timestamp": "2026-03-27T03:34:38.496Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-27T03:34:38.517Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/generate",
+      "provider": "kling",
+      "estimatedCost": 0.1,
+      "status": "success",
+      "durationMs": 2,
+      "timestamp": "2026-03-27T03:34:38.697Z"
+    },
+    {
+      "apiKey": "vllm_test_pro_001",
+      "endpoint": "/v1/analyze",
+      "provider": "gemini",
+      "estimatedCost": null,
+      "status": "success",
+      "durationMs": 0,
+      "timestamp": "2026-03-27T03:34:38.698Z"
     }
   ]
 }
