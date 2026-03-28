@@ -1,5 +1,5 @@
 {
-  "last_fetched": "2026-03-27",
+  "last_fetched": "2026-03-28",
   "exchange": {
     "history": [
       {
@@ -13,6 +13,12 @@
         "usd_krw": 1506.82883,
         "usd_jpy": 159.619901,
         "usd_eur": 0.866132
+      },
+      {
+        "date": "2026-03-28",
+        "usd_krw": 1509.015426,
+        "usd_jpy": 160.059743,
+        "usd_eur": 0.868142
       }
     ]
   },
@@ -28,6 +34,12 @@
         "date": "2026-03-27",
         "city": "Seoul",
         "temp_c": 16,
+        "condition": "Sunny"
+      },
+      {
+        "date": "2026-03-28",
+        "city": "Seoul",
+        "temp_c": 18,
         "condition": "Sunny"
       }
     ]

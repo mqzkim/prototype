@@ -1,5 +1,5 @@
 {
-  "last_fetched": "2026-03-27",
+  "last_fetched": "2026-03-28",
   "daily": [
     {
       "date": "2026-03-26",
@@ -134,6 +134,81 @@
           "language": "Python",
           "stars": 0,
           "url": "https://github.com/datalab-to/chandra"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-28",
+      "repos": [
+        {
+          "name": "mvanhorn/last30days-skill",
+          "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/mvanhorn/last30days-skill"
+        },
+        {
+          "name": "hacksider/Deep-Live-Cam",
+          "description": "real time face swap and one-click video deepfake with only a single image",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/hacksider/Deep-Live-Cam"
+        },
+        {
+          "name": "SakanaAI/AI-Scientist-v2",
+          "description": "The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via Agentic Tree Search",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/SakanaAI/AI-Scientist-v2"
+        },
+        {
+          "name": "microsoft/VibeVoice",
+          "description": "Open-Source Frontier Voice AI",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/microsoft/VibeVoice"
+        },
+        {
+          "name": "twentyhq/twenty",
+          "description": "Building a modern alternative to Salesforce, powered by the community.",
+          "language": "TypeScript",
+          "stars": 0,
+          "url": "https://github.com/twentyhq/twenty"
+        },
+        {
+          "name": "datalab-to/chandra",
+          "description": "OCR model that handles complex tables, forms, handwriting with full layout.",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/datalab-to/chandra"
+        },
+        {
+          "name": "obra/superpowers",
+          "description": "An agentic skills framework &amp; software development methodology that works.",
+          "language": "Shell",
+          "stars": 0,
+          "url": "https://github.com/obra/superpowers"
+        },
+        {
+          "name": "virattt/dexter",
+          "description": "An autonomous agent for deep financial research",
+          "language": "TypeScript",
+          "stars": 0,
+          "url": "https://github.com/virattt/dexter"
+        },
+        {
+          "name": "Yeachan-Heo/oh-my-claudecode",
+          "description": "Teams-first Multi-agent orchestration for Claude Code",
+          "language": "TypeScript",
+          "stars": 0,
+          "url": "https://github.com/Yeachan-Heo/oh-my-claudecode"
+        },
+        {
+          "name": "FreeCAD/FreeCAD",
+          "description": "Official source code of FreeCAD, a free and opensource multiplatform 3D parametric modeler.",
+          "language": "C++",
+          "stars": 0,
+          "url": "https://github.com/FreeCAD/FreeCAD"
         }
       ]
     }

@@ -11,6 +11,12 @@
       "title": "ESM Import/Export Syntax",
       "content": "The codebase uses native ES module import/export syntax throughout, enabled by \"type\": \"module\" in package.json. This avoids CommonJS require() and allows top-level await.",
       "category": "nodejs"
+    },
+    {
+      "date": "2026-03-28",
+      "title": "JSON Files as a Database",
+      "content": "Instead of using a database, this project stores all state as JSON files in the data/ directory. This keeps the project dependency-free and allows version-controlling application state via git.",
+      "category": "architecture"
     }
   ]
 }

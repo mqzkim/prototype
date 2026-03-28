@@ -1,7 +1,7 @@
 {
-  "date": "2026-03-27",
+  "date": "2026-03-28",
   "quote": {
-    "text": "There is no single development, in either technology or management technique, which by itself promises even one order of magnitude improvement within a decade in productivity.",
-    "author": "Fred Brooks"
+    "text": "Before software can be reusable it first has to be usable.",
+    "author": "Ralph Johnson"
   }
 }
