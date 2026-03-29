@@ -17,6 +17,12 @@
       "title": "JSON Files as a Database",
       "content": "Instead of using a database, this project stores all state as JSON files in the data/ directory. This keeps the project dependency-free and allows version-controlling application state via git.",
       "category": "architecture"
+    },
+    {
+      "date": "2026-03-29",
+      "title": "fileURLToPath for __dirname in ESM",
+      "content": "In ES modules, __dirname is not available. The pattern dirname(fileURLToPath(import.meta.url)) recreates it, converting the module URL to a filesystem path.",
+      "category": "nodejs"
     }
   ]
 }

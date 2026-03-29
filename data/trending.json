@@ -1,5 +1,5 @@
 {
-  "last_fetched": "2026-03-28",
+  "last_fetched": "2026-03-29",
   "daily": [
     {
       "date": "2026-03-26",
@@ -209,6 +209,74 @@
           "language": "C++",
           "stars": 0,
           "url": "https://github.com/FreeCAD/FreeCAD"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-29",
+      "repos": [
+        {
+          "name": "hacksider/Deep-Live-Cam",
+          "description": "real time face swap and one-click video deepfake with only a single image",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/hacksider/Deep-Live-Cam"
+        },
+        {
+          "name": "obra/superpowers",
+          "description": "An agentic skills framework &amp; software development methodology that works.",
+          "language": "Shell",
+          "stars": 0,
+          "url": "https://github.com/obra/superpowers"
+        },
+        {
+          "name": "SakanaAI/AI-Scientist-v2",
+          "description": "The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via Agentic Tree Search",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/SakanaAI/AI-Scientist-v2"
+        },
+        {
+          "name": "virattt/dexter",
+          "description": "An autonomous agent for deep financial research",
+          "language": "TypeScript",
+          "stars": 0,
+          "url": "https://github.com/virattt/dexter"
+        },
+        {
+          "name": "twentyhq/twenty",
+          "description": "Building a modern alternative to Salesforce, powered by the community.",
+          "language": "TypeScript",
+          "stars": 0,
+          "url": "https://github.com/twentyhq/twenty"
+        },
+        {
+          "name": "onyx-dot-app/onyx",
+          "description": "Open Source AI Platform - AI Chat with advanced features that works with every LLM",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/onyx-dot-app/onyx"
+        },
+        {
+          "name": "datalab-to/chandra",
+          "description": "OCR model that handles complex tables, forms, handwriting with full layout.",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/datalab-to/chandra"
+        },
+        {
+          "name": "agentscope-ai/agentscope",
+          "description": "Build and run agents you can see, understand and trust.",
+          "language": "Python",
+          "stars": 0,
+          "url": "https://github.com/agentscope-ai/agentscope"
+        },
+        {
+          "name": "apache/superset",
+          "description": "Apache Superset is a Data Visualization and Data Exploration Platform",
+          "language": "TypeScript",
+          "stars": 0,
+          "url": "https://github.com/apache/superset"
         }
       ]
     }
