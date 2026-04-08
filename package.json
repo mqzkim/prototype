@@ -12,8 +12,16 @@
     "evaluate": "node scripts/evaluate-rules.js",
     "validate:design": "node scripts/validate-design.js",
     "evaluate:structural": "node scripts/evaluate-structural.js --prepare",
-    "evaluate:all": "npm run evaluate && npm run evaluate:structural"
+    "evaluate:all": "npm run evaluate && npm run evaluate:structural",
+    "prepare": "husky"
   },
-  "keywords": ["claude-code", "cloud-native", "daily-service"],
-  "license": "MIT"
+  "keywords": [
+    "claude-code",
+    "cloud-native",
+    "daily-service"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
 }
