@@ -1,0 +1,77 @@
+# Design Review Guide
+
+빌드된 HTML 페이지의 디자인 무결성 검증 상세 기준.
+
+## 핵심 원칙: 휴리스틱 검증
+
+개별 CSS 속성의 존재 여부만 체크하는 것은 무의미합니다.
+실제 overflow를 방지하려면 관련 속성들이 **완전한 패턴으로 함께** 존재해야 합니다.
+
+## Overflow 방지 3대 패턴
+
+### 1. Ellipsis Triplet (셋 다 있어야 작동)
+```css
+.text-field {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+```
+
+### 2. Flex-child Blowout Prevention
+```css
+.flex-text-container {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+```
+
+### 3. Fixed-element Shrink Protection
+```css
+.rank-badge { flex-shrink: 0; min-width: 24px; }
+.meta-area  { flex-shrink: 0; max-width: 120px; }
+```
+
+## 콘텐츠 기반 위험 탐지
+
+CSS가 완벽해도 실제 데이터 길이에 따라 위험도가 달라집니다.
+빌드된 HTML에서 실제 텍스트 길이를 측정하고, 임계값(60ch, 80ch)을 초과하면
+full overflow chain이 있는지 검증합니다.
+
+## 검증 카테고리
+
+| 카테고리 | 검증 방식 |
+|---------|----------|
+| 섹션 완결성 | en/ko 빌드에 모든 필수 섹션 텍스트 존재 |
+| Ellipsis Triplet | nowrap + overflow:hidden + text-overflow:ellipsis 동시 존재 |
+| Flex-child 보호 | min-width:0 + overflow:hidden 동시 존재 |
+| Flex-row 제어 | 행 컨테이너에 overflow:hidden 존재 |
+| Card 클리핑 | grid 안의 카드에 overflow:hidden 존재 |
+| Shrink 방지 | 고정 요소(rank, meta)에 flex-shrink:0 존재 |
+| 콘텐츠 위험 | 실제 텍스트 길이 > 임계값일 때 full chain 검증 |
+| i18n 완결성 | 미번역 플레이스홀더 잔존 여부 |
+| 접근성 | charset, viewport, title, lang |
+| 레이아웃 | 반응형 breakpoint, 카드 구조 |
+| 일별 페이지 | daily 페이지 플레이스홀더 미잔존 |
+
+## 새 섹션 추가 체크리스트
+
+1. `src/templates/index.html` — 섹션 HTML + CSS 추가
+2. `src/templates/daily.html` — 일별 페이지에도 반영
+3. `data/i18n.json` — en/ko 번역 키 추가
+4. `src/generators/build.js` — 빌드 함수 + replace 추가
+5. `scripts/validate-design.js` — 필수 섹션 목록에 추가
+6. `npm run validate:design` — 검증 통과 확인
+
+## 학습된 교훈
+
+### 2026-03-26 #1: Ellipsis Triplet 누락
+- **증상**: trending 카드의 긴 텍스트가 카드 밖으로 넘침
+- **원인**: `text-overflow:ellipsis`만 있고 `white-space:nowrap` + `overflow:hidden` 불완전
+- **교훈**: 개별 속성이 아니라 패턴 전체(triplet)를 검증해야 함
+
+### 2026-03-26 #2: Grid Item min-width:auto 함정
+- **증상**: `.feature-card`에 `overflow:hidden` 있는데도 텍스트가 카드 밖으로 넘침
+- **원인**: CSS Grid item 기본값 `min-width:auto` → grid cell이 콘텐츠만큼 팽창 → `overflow:hidden` 무효화
+- **교훈**: Grid/flex item에는 반드시 `min-width:0`을 함께 적용

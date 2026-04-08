@@ -1,12 +1,30 @@
 {
-  "last_fetched": "2026-03-26",
+  "last_fetched": "2026-03-29",
   "exchange": {
     "history": [
       {
         "date": "2026-03-26",
-        "usd_krw": 1350.00,
-        "usd_jpy": 150.00,
+        "usd_krw": 1350,
+        "usd_jpy": 150,
         "usd_eur": 0.92
+      },
+      {
+        "date": "2026-03-27",
+        "usd_krw": 1506.82883,
+        "usd_jpy": 159.619901,
+        "usd_eur": 0.866132
+      },
+      {
+        "date": "2026-03-28",
+        "usd_krw": 1509.015426,
+        "usd_jpy": 160.059743,
+        "usd_eur": 0.868142
+      },
+      {
+        "date": "2026-03-29",
+        "usd_krw": 1508.638028,
+        "usd_jpy": 160.018711,
+        "usd_eur": 0.868056
       }
     ]
   },
@@ -17,6 +35,24 @@
         "city": "Seoul",
         "temp_c": null,
         "condition": "pending first fetch"
+      },
+      {
+        "date": "2026-03-27",
+        "city": "Seoul",
+        "temp_c": 16,
+        "condition": "Sunny"
+      },
+      {
+        "date": "2026-03-28",
+        "city": "Seoul",
+        "temp_c": 18,
+        "condition": "Sunny"
+      },
+      {
+        "date": "2026-03-29",
+        "city": "Seoul",
+        "temp_c": 18,
+        "condition": "Cloudy"
       }
     ]
   }

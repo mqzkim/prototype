@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "status": "completed",
+  "maxIterations": 10,
+  "stagnantThreshold": 3,
+  "iterations": [
+    {
+      "id": 1,
+      "timestamp": "2026-03-27T17:10:34.546Z",
+      "evaluate": {
+        "scores": {
+          "cacheHits": 13,
+          "cacheMisses": 0,
+          "agents": "PASS",
+          "agentDetails": [
+            {
+              "name": "architect",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "design-reviewer",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "agent-creator",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "agent-evaluator",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "architect",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "claudemd-creator",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "claudemd-evaluator",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "harness-creator",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "harness-evaluator",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "hook-creator",
+              "overall": "PASS",
+              "cached": true
+            },
+            {
+              "name": "skill-evaluator",
+              "overall": "PASS",
+              "cached": true
+            }
+          ],
+          "claudemd": "PASS",
+          "skills": "PASS",
+          "harness": "SKIP"
+        },
+        "totalScore": 100,
+        "cacheHits": 13,
+        "cacheMisses": 0
+      },
+      "create": null,
+      "retrospect": {
+        "evaluate": null,
+        "create": null
+      },
+      "delta": 100
+    }
+  ],
+  "currentScore": 100,
+  "bestScore": 100,
+  "stagnantCount": 0
+}

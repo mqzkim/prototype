@@ -10,6 +10,39 @@
       "data_files": 2,
       "repo_size_kb": 116,
       "project_age_days": 1
+    },
+    {
+      "date": "2026-03-27",
+      "collected_at": "2026-03-27T09:19:09.305Z",
+      "commits": 46,
+      "branches": 2,
+      "lines_of_code": 7627,
+      "total_files": 86,
+      "data_files": 17,
+      "repo_size_kb": 756,
+      "project_age_days": 1
+    },
+    {
+      "date": "2026-03-28",
+      "collected_at": "2026-03-28T09:12:18.559Z",
+      "commits": 47,
+      "branches": 2,
+      "lines_of_code": 7627,
+      "total_files": 86,
+      "data_files": 17,
+      "repo_size_kb": 784,
+      "project_age_days": 2
+    },
+    {
+      "date": "2026-03-29",
+      "collected_at": "2026-03-29T09:13:03.642Z",
+      "commits": 48,
+      "branches": 2,
+      "lines_of_code": 7627,
+      "total_files": 86,
+      "data_files": 17,
+      "repo_size_kb": 800,
+      "project_age_days": 3
     }
   ]
 }

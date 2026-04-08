@@ -16,7 +16,11 @@ const ROOT = join(__dirname, '..');
  * @returns {object}
  */
 function loadRulesSchema() {
-  const md = readFileSync(join(ROOT, 'RULES.md'), 'utf-8');
+  const rulesPath = join(ROOT, 'RULES.md');
+  if (!existsSync(rulesPath)) {
+    return null;
+  }
+  const md = readFileSync(rulesPath, 'utf-8');
   const match = md.match(/```json\r?\n([\s\S]*?)\r?\n```/);
   if (!match) throw new Error('No JSON schema found in RULES.md');
   return JSON.parse(match[1]);
@@ -248,6 +252,13 @@ async function measurePerformance() {
  */
 export async function evaluateRules() {
   const schema = loadRulesSchema();
+  if (!schema) {
+    console.log('RULES.md not found — evaluation skipped.');
+    const result = { timestamp: new Date().toISOString(), skipped: true, reason: 'RULES.md not found' };
+    writeFileSync(join(ROOT, 'data', 'evaluation-scores.json'),
+      JSON.stringify(result, null, 2));
+    return result;
+  }
   const ruleResults = [];
   const categoryScores = {};
 
@@ -417,6 +428,10 @@ export async function evaluateRules() {
 
 if (process.argv[1] && process.argv[1].includes('evaluate-rules.js')) {
   evaluateRules().then((result) => {
+    if (result.skipped) {
+      process.stdout.write(`\n${result.reason}\n`);
+      return;
+    }
     process.stdout.write(`\n=== Evaluation Results ===\n`);
     process.stdout.write(`Score: ${result.totalScore}/${result.maxScore} (${result.percentage}%)\n`);
     process.stdout.write(`Status: ${result.passing ? 'PASSING' : 'FAILING'}\n\n`);

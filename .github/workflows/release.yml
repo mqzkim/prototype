@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # auto-push 커밋은 릴리스 생성하지 않음
+    if: "!startsWith(github.event.head_commit.message, 'auto-push:')"
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate version tag
+        id: version
+        run: |
+          DATE=$(date +%Y.%m.%d)
+          EXISTING=$(git tag -l "v${DATE}.*" | sort -V | tail -1)
+          if [ -z "$EXISTING" ]; then
+            VERSION="v${DATE}.1"
+          else
+            NUM=$(echo "$EXISTING" | sed "s/v${DATE}\.//")
+            VERSION="v${DATE}.$((NUM + 1))"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Get changes
+        id: changes
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            CHANGES=$(git log --oneline -10)
+          else
+            CHANGES=$(git log --oneline ${LAST_TAG}..HEAD)
+          fi
+          echo "changes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
+          body: |
+            ## Changes
+            ${{ steps.changes.outputs.changes }}
